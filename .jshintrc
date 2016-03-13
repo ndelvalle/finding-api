@@ -1,0 +1,14 @@
+{
+  "node": true,
+  "es5": false,
+  "strict": true,
+  "indent": 2,
+  "quotmark": "single",
+  "expr": true,
+  "globals": {
+    "it": false,
+    "describe": false,
+    "before": false,
+    "beforeEach": false
+  }
+}

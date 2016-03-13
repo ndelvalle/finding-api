@@ -1,0 +1,9 @@
+.DS_Store
+node_modules
+coverage
+.env
+.vscode
+*.log
+*.todo
+*.sublime-workspace
+*.sublime-project
