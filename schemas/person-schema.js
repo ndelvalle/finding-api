@@ -27,6 +27,7 @@ var PersonSchema = new Schema({
 
   gender: {
     type: String,
+    enum: 'M F'.split(' '),
     required: true
   },
 
