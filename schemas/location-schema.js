@@ -9,4 +9,4 @@ var LocationSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Geo', LocationSchema);
+module.exports = mongoose.model('Location', LocationSchema);
