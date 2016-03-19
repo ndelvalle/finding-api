@@ -15,9 +15,6 @@ var PersonSchema = new Schema({
     last: {
       type: String,
       required: true
-    },
-    full: {
-      type: String
     }
   },
 
