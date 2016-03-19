@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
-var LocationSchema = require('./location-schema');
+var GeoSchema      = require('./geo-schema');
 
 var PersonSchema = new Schema({
 
@@ -31,7 +31,7 @@ var PersonSchema = new Schema({
     required: true
   },
 
-  location: LocationSchema,
+  geo: GeoSchema,
 
   createdAt: {
     type: Date,
@@ -42,7 +42,6 @@ var PersonSchema = new Schema({
     type: Date,
     default: Date.now
   }
-
 
 });
 
