@@ -1,9 +1,9 @@
 'use strict';
 
 var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+var Schema = mongoose.Schema;
 
-var GeoSchema      = require('./geo-schema');
+var GeoSchema = require('./geo-schema');
 
 var PersonSchema = new Schema({
 
@@ -15,6 +15,9 @@ var PersonSchema = new Schema({
     last: {
       type: String,
       required: true
+    },
+    full: {
+      type: String
     }
   },
 
@@ -43,13 +46,27 @@ var PersonSchema = new Schema({
     default: Date.now
   }
 
+}, {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true
+  }
 });
 
-PersonSchema.pre('save', function(next){
+PersonSchema.virtual('name.full').get(function() {
+  var first = this.name.first || '';
+  var last = this.name.last || '';
+
+  return (first + ' ' + last).trim();
+});
+
+PersonSchema.pre('save', function(next) {
   var now = new Date();
   this.updatedAt = now;
-  if(!this.createdAt) {
-      this.createdAt = now;
+  if (!this.createdAt) {
+    this.createdAt = now;
   }
   next();
 });
