@@ -9,9 +9,9 @@ router.get('/', function(req, res) {
     message: 'Welcome to Missing Person API!'
   });
 });
-/*
-router.route('/people')
-  .get(controllers.user.find.bind(controllers.user));
-*/
+
+router.route('/missing')
+  .get(controllers.missing.find.bind(controllers.missing));
+
 
 module.exports = router;
