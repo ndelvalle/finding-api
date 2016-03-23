@@ -16,6 +16,10 @@
     "url": "https://github.com/keepers/missing-api/issues"
   },
   "homepage": "https://github.com/keepers/missing-api#readme",
+  "engines": {
+    "node": "4.4.x",
+    "npm": "2.14.x"
+  },
   "dependencies": {
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
