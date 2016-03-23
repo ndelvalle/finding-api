@@ -1,11 +1,8 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
 var GeoSchema = require('./geo-schema');
 
-var PersonSchema = new Schema({
+module.exports = {
 
   name: {
     first: {
@@ -33,39 +30,4 @@ var PersonSchema = new Schema({
 
   geo: GeoSchema,
 
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-
-}, {
-  toObject: {
-    virtuals: true
-  },
-  toJSON: {
-    virtuals: true
-  }
-});
-
-PersonSchema.virtual('name.full').get(function() {
-  var first = this.name.first || '';
-  var last = this.name.last || '';
-
-  return (first + ' ' + last).trim();
-});
-
-PersonSchema.pre('save', function(next) {
-  var now = new Date();
-  this.updatedAt = now;
-  if (!this.createdAt) {
-    this.createdAt = now;
-  }
-  next();
-});
-
-module.exports = mongoose.model('Person', PersonSchema);
+};
