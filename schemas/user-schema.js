@@ -30,21 +30,21 @@ var UserSchema = new Schema({
 UserSchema.pre('save', function(next) {
   var user = this;
 
-  // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) return next();
+  if (!user.isModified('password')) { return next(); }
 
   // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-    if (err) return next(err);
-
-    // hash the password along with our new salt
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      if (err) return next(err);
-
-      // override the cleartext password with the hashed one
-      user.password = hash;
-      next();
-    });
+  bcrypt.genSaltAsync(SALT_WORK_FACTOR)
+  .then(function(salt) {
+    // hash the password along with the new salt
+    return bcrypt.hashAsync(user.password, salt);
+  })
+  .then(function(hash) {
+    // override the cleartext password with the hashed one
+    user.password = hash;
+    next();
+  })
+  .catch(function(err) {
+    return next(err);
   });
 });
 
