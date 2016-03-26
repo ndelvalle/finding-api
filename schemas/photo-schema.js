@@ -4,11 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PhotoSchema = mongoose.Schema({
-
-  url: {
-    type: String
-  }
-
+  url: String
 },{ _id : false });
 
 module.exports = PhotoSchema;
