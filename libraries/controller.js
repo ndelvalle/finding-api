@@ -1,6 +1,6 @@
 'use strict';
 
-class Controller {
+module.exports = class Controller {
 
   constructor(model) {
     this.model = model;
@@ -8,85 +8,65 @@ class Controller {
 
   find(req, res, next) {
     this.model.find()
-    .then(function(collection) {
+    .then(collection => {
       res.status(200).json(collection);
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
   }
 
   findOne(req, res, next) {
     this.model.findOne()
-    .then(function(doc) {
+    .then(doc => {
       res.status(200).json(doc);
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
   }
 
   findById(req, res, next) {
-    var id = req.params.id;
+    const id = req.params.id;
 
     this.model.findById(id)
-    .then(function(doc) {
-      if (!doc) {
-        return next(404);
-      }
-
-      res.status(200).json(doc);
+    .then(doc => {
+      if (!doc) return next(404);
+      return res.status(200).json(doc);
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
   }
 
   create(req, res, next) {
-    var self = this;
-
     this.model.create(req.body)
-    .then(function(doc) {
-
+    .then(doc => {
       res.status(201).json(doc);
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
   }
 
   update(req, res, next) {
-    var id = req.params.id;
-    var input = req.body;
+    const id = req.params.id;
+    const input = req.body;
 
     this.model.update(id, input)
-    .then(function(doc) {
+    .then(doc => {
       if (!doc) {
         return next(404);
       }
 
-      res.status(200).json(doc);
+      return res.status(200).json(doc);
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
   }
 
   remove(req, res, next) {
-    var id = req.params.id;
+    const id = req.params.id;
 
     this.model.remove(id)
-    .then(function(doc) {
+    .then(doc => {
       if (!doc) {
         return next(404);
       }
 
-      res.sendStatus(204);
+      return res.sendStatus(204);
     })
-    .catch(function(err) {
-      return next(err);
-    });
+    .catch(err => next(err));
   }
-}
-
-module.exports = Controller;
+};
