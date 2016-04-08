@@ -1,13 +1,13 @@
 'use strict';
 
-var Model = class {
+module.exports = class Model {
 
   constructor(SchemaModel) {
     this.SchemaModel = SchemaModel;
   }
 
   create(input) {
-    var newSchemaModel = new this.SchemaModel(input);
+    const newSchemaModel = new this.SchemaModel(input);
     return newSchemaModel.saveAsync();
   }
 
@@ -16,30 +16,30 @@ var Model = class {
       throw new Error('Missing id parametter');
     }
 
-    return this.SchemaModel.findByIdAndUpdate(id, updatedModel, {new: true})
+    return this.SchemaModel.findByIdAndUpdate(id, updatedModel, { new: true })
       .execAsync();
   }
 
-  find(query, relationships) {
+  find(query, populate) {
     return this.SchemaModel.find(query)
-      .populate(relationships || '')
+      .populate(populate || '')
       .execAsync();
   }
 
-  findOne(query, relationships) {
+  findOne(query, populate) {
     return this.SchemaModel.findOne(query)
-      .populate(relationships || '')
+      .populate(populate || '')
       .execAsync();
   }
 
-  findById(id, relationships) {
+  findById(id, populate) {
     if (!id) {
       throw new Error('Missing id parametter');
     }
 
     return this.SchemaModel
       .findById(id)
-      .populate(relationships || '')
+      .populate(populate || '')
       .execAsync();
   }
 
@@ -52,5 +52,3 @@ var Model = class {
       .execAsync();
   }
 };
-
-module.exports = Model;
