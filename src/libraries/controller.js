@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = class Controller {
+export default class Controller {
 
   constructor(model) {
     this.model = model;
@@ -8,17 +6,13 @@ module.exports = class Controller {
 
   find(req, res, next) {
     this.model.find()
-    .then(collection => {
-      res.status(200).json(collection);
-    })
+    .then(collection => res.status(200).json(collection))
     .catch(err => next(err));
   }
 
   findOne(req, res, next) {
     this.model.findOne()
-    .then(doc => {
-      res.status(200).json(doc);
-    })
+    .then(doc => res.status(200).json(doc))
     .catch(err => next(err));
   }
 
@@ -35,9 +29,7 @@ module.exports = class Controller {
 
   create(req, res, next) {
     this.model.create(req.body)
-    .then(doc => {
-      res.status(201).json(doc);
-    })
+    .then(doc => res.status(201).json(doc))
     .catch(err => next(err));
   }
 
@@ -47,10 +39,7 @@ module.exports = class Controller {
 
     this.model.update(id, input)
     .then(doc => {
-      if (!doc) {
-        return next(404);
-      }
-
+      if (!doc) return next(404);
       return res.status(200).json(doc);
     })
     .catch(err => next(err));
@@ -61,12 +50,9 @@ module.exports = class Controller {
 
     this.model.remove(id)
     .then(doc => {
-      if (!doc) {
-        return next(404);
-      }
-
+      if (!doc) return next(404);
       return res.sendStatus(204);
     })
     .catch(err => next(err));
   }
-};
+}

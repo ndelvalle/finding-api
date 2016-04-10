@@ -10,6 +10,7 @@ var Missing = require('../models/missing-model');
 
 Promise.promisifyAll(mongoose);
 mongoose.connect(config.MONGODB_URL);
+mongoose.connect('mongodb://heroku_q0jc3w1d:np4n527c13jdsqd1g2qmnuncfl@ds011439.mlab.com:11439/heroku_q0jc3w1d');
 
 // amount of random data to generate
 var AMOUNT = 20;
@@ -47,7 +48,7 @@ function generatePerson(geo) {
 function generateMissing() {
   var geo = generateGeo();
   var person = generatePerson(geo);
-  
+
   return Missing.create({
     person: person,
     lastSeen: new Date(),

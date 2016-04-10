@@ -1,31 +1,29 @@
-'use strict';
+import GeoSchema from './geo-schema';
 
-var GeoSchema = require('./geo-schema');
-
-module.exports = {
+export default {
 
   name: {
     first: {
       type: String,
-      required: true
+      required: true,
     },
     last: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   age: {
     type: Number,
     required: true,
     min: 0,
-    max: 130
+    max: 130,
   },
 
   gender: {
     type: String,
     enum: 'M F'.split(' '),
-    required: true
+    required: true,
   },
 
   geo: GeoSchema,

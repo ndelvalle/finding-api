@@ -1,82 +1,80 @@
-'use strict';
-
-exports = module.exports = {
+export default {
 
   loc: {
     type: [Number],    // [<longitude>, <latitude>]
     index: '2dsphere', // create the geospatial index
-    required: true
+    required: true,
   },
 
   // Venue name: AlleyNYC
   name: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
   },
 
   // Street address: 500 7th Ave
   line1: {
     type: String,
     default: '',
-    trim: true
+    trim: true,
   },
 
   // Suite/Apt/Floor/Unit: Floor 17A
   line2: {
     type: String,
-    default: ''
+    default: '',
   },
 
   // Friendly neighborhood name: Midtown
   neighborhood: {
     type: String,
-    default: ''
+    default: '',
   },
 
   // NY Borough: Manhattan
   sublocality: {
     type: String,
-    default: ''
+    default: '',
   },
 
   // City name: New York
   city: {
     type: String,
-    required: true
+    required: true,
   },
 
   // ZIP code: 10018
   postalCode: {
-    type: String
+    type: String,
   },
 
   // State code: NY
   stateCode: {
-    type: String
+    type: String,
   },
 
   // Full state name: New York
   state: {
-    type: String
+    type: String,
   },
 
   // Country code: US
   countryCode: {
     type: String,
-    required: true
+    required: true,
   },
 
   // Full state name: United States
   country: {
     type: String,
-    required: true
+    required: true,
   },
 
   // Olson time zone id: America/New_York
   timezone: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 
 };

@@ -1,6 +1,4 @@
-'use strict';
-
-module.exports = class Model {
+export default class Model {
 
   constructor(SchemaModel) {
     this.SchemaModel = SchemaModel;
@@ -12,10 +10,7 @@ module.exports = class Model {
   }
 
   update(id, updatedModel) {
-    if (!id) {
-      throw new Error('Missing id parametter');
-    }
-
+    if (!id) throw new Error('Missing id parametter');
     return this.SchemaModel.findByIdAndUpdate(id, updatedModel, { new: true })
       .execAsync();
   }
@@ -33,10 +28,7 @@ module.exports = class Model {
   }
 
   findById(id, populate) {
-    if (!id) {
-      throw new Error('Missing id parametter');
-    }
-
+    if (!id) throw new Error('Missing id parametter');
     return this.SchemaModel
       .findById(id)
       .populate(populate || '')
@@ -44,11 +36,8 @@ module.exports = class Model {
   }
 
   remove(id) {
-    if (!id) {
-      throw new Error('Missing id parametter');
-    }
-
+    if (!id) throw new Error('Missing id parametter');
     return this.SchemaModel.findByIdAndRemove(id)
       .execAsync();
   }
-};
+}
