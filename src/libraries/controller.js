@@ -5,7 +5,7 @@ export default class Controller {
   }
 
   find(req, res, next) {
-    this.model.find()
+    this.model.find(req.query)
     .then(collection => res.status(200).json(collection))
     .catch(err => next(err));
   }
