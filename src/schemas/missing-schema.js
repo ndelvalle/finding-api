@@ -53,14 +53,9 @@ const MissingSchema = new Schema({
 
 });
 
-MissingSchema.virtual('person.name.full')
-.get(() => {
-  const first = this.name.first || '';
-  const last = this.name.last || '';
-  return `${first} ${last}`.trim();
-});
-
-MissingSchema.pre('save', next => {
+MissingSchema
+// @TODO: can't get to work this with arrow function
+.pre('save', function (next) {  // eslint-disable-line func-names
   const now = new Date();
   this.updatedAt = now;
   if (!this.createdAt) this.createdAt = now;

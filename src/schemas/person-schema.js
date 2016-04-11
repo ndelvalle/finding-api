@@ -3,14 +3,8 @@ import GeoSchema from './geo-schema';
 export default {
 
   name: {
-    first: {
-      type: String,
-      required: true,
-    },
-    last: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
 
   age: {
