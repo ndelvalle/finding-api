@@ -1,5 +1,3 @@
-import queryModifier from 'get-query-modifier';
-
 export default class Model {
 
   constructor(SchemaModel) {
@@ -18,8 +16,7 @@ export default class Model {
   }
 
   find(query) {
-    const modifier = queryModifier(query);
-    return modifier(this.SchemaModel.find(query).lean())
+    return this.SchemaModel.find(query)
       .execAsync();
   }
 
