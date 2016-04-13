@@ -7,7 +7,6 @@ import Faker from 'Faker';
 
 Promise.promisifyAll(mongoose);
 mongoose.connect(config.MONGODB_URL);
-// mongoose.connect('mongodb://heroku_q0jc3w1d:np4n527c13jdsqd1g2qmnuncfl@ds011439.mlab.com:11439/heroku_q0jc3w1d');
 
 // amount of random data to generate
 const AMOUNT = 20;
