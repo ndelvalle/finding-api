@@ -7,6 +7,7 @@ import Faker from 'Faker';
 
 Promise.promisifyAll(mongoose);
 mongoose.connect(config.MONGODB_URL);
+// mongoose.connect('mongodb://heroku_q0jc3w1d:np4n527c13jdsqd1g2qmnuncfl@ds011439.mlab.com:11439/heroku_q0jc3w1d');
 
 // amount of random data to generate
 const AMOUNT = 20;
@@ -29,21 +30,13 @@ function generateGeo() {
   };
 }
 
-function generatePerson(geo) {
-  return {
+function generateMissing() {
+  const geo = generateGeo();
+  return Missing.create({
     name: `${Faker.Name.firstName()} ${Faker.Name.lastName()}`,
     age: Math.floor(Math.random() * (80 - 18 + 1) + 18),
     gender: ['M', 'F'][Math.floor(Math.random() * ['M', 'F'].length)],
     geo,
-  };
-}
-
-function generateMissing() {
-  const geo = generateGeo();
-  const person = generatePerson(geo);
-
-  return Missing.create({
-    person,
     lastSeen: new Date(),
     photos: [{
       url: Faker.Image.avatar(),

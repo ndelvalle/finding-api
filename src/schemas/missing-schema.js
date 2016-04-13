@@ -1,13 +1,28 @@
 import mongoose from 'mongoose';
+import GeoSchema from './geo-schema';
+import PhotoSchema from './photo-schema';
 
 const Schema = mongoose.Schema;
 
-import PersonSchema from './person-schema';
-import PhotoSchema from './photo-schema';
-
 const MissingSchema = new Schema({
 
-  person: PersonSchema,
+  name: {
+    type: String,
+    required: true,
+  },
+
+  age: {
+    type: Number,
+    required: true,
+    min: 0,
+    max: 130,
+  },
+
+  gender: {
+    type: String,
+    enum: 'M F'.split(' '),
+    required: true,
+  },
 
   lastSeen: {
     type: Date,
@@ -16,6 +31,7 @@ const MissingSchema = new Schema({
   isBrowsable: {
     type: Boolean,
     default: true,
+    select: false,
   },
 
   isMissing: {
@@ -40,6 +56,8 @@ const MissingSchema = new Schema({
     },
 
   },
+
+  geo: GeoSchema,
 
   createdAt: {
     type: Date,
