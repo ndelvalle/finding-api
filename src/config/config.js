@@ -6,4 +6,10 @@ export default {
     KEY: process.env.JWT_KEY || '92601aa638620ae31418',
     EXPIRATION: process.env.JWT_EXPIRATION || 86400,
   },
+  AWS: {
+    ACCESS_KEY_ID: '',
+    SECRET_ACCESS_KEY: '',
+    REGION: 'us-west-2',
+    BUCKET: 'missing-images',
+  },
 };
