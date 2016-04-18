@@ -1,42 +1,34 @@
-import fs from 'fs';
-import AWS from 'aws-sdk';
+import knox from 'knox';
 import Promise from 'bluebird';
 import config from '../config/config';
 
-export class ImageUploader {
+export default class ImageUploader {
 
   constructor() {
-    AWS.config.update({
-      accessKeyId: config.AWS.ACCESS_KEY_ID,
-      secretAccessKey: config.AWS.SECRET_ACCESS_KEY,
-      region: config.AWS.REGION,
-    });
-    this.s3 = new AWS.S3({
-      params: { Bucket: config.AWS.BUCKET },
+    this.client = knox.createClient({
+      key: config.AWS.ACCESS_KEY_ID,
+      secret: config.AWS.SECRET_ACCESS_KEY,
+      bucket: config.AWS.BUCKET,
     });
   }
 
-  upload(file) {
-    const params = {
-      Key: file.name,
-      Body: '',
-      ContentType: file.mimetype,
-      ACL: 'public-read',
+  multipleUpload(files, missingId) {
+    const uploadQueue = files.map((file, index) => this.upload(file, missingId, index));
+    return Promise.all(uploadQueue);
+  }
+
+  upload(file, missingId, fileName) {
+    const path = `/photos/${missingId}/${fileName || 0}.png`;
+    const buffer = new Buffer(file.split(',')[1], 'base64');
+    const headers = {
+      'Content-Type': 'image/png',
+      'x-amz-acl': 'public-read',
     };
 
     return new Promise((resolve, reject) => {
-      fs.readFile(file.path, (err, data) => {
+      this.client.putBuffer(buffer, path, headers, (err) => {
         if (err) return reject(err);
-        params.Body = data;
-        return resolve(params);
-      });
-    })
-    .then(bucketParams => {
-      return new Promise((resolve, reject) => {
-        this.s3.putObject(bucketParams, (err, data) => {
-          if (err) return reject(err);
-          return resolve(data);
-        });
+        return resolve(`https://${config.AWS.BUCKET}.s3.amazonaws.com/${config.AWS.BUCKET}/${path}`);
       });
     });
   }
