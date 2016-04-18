@@ -18,8 +18,8 @@ require('./libraries/promisify-all')(['mongoose', 'jsonwebtoken', 'bcrypt']);
 mongoose.connect(config.MONGODB_URL);
 
 app.use(helmet());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
 app.use(morgan('tiny'));
 
 // @TODO: fix middlewares.cors call, default shouldn't be needed
