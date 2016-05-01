@@ -1,13 +1,12 @@
 import Model from '../libraries/model';
 import Missing from '../schemas/missing-schema';
-import queryModifier from 'get-query-modifier';
 import { missing as queryGenerator } from '../helper/query-generator';
 import ImageUploader from '../libraries/image-uploader';
 
 class MissingModel extends Model {
   find(query) {
-    const modifier = queryModifier((query));
-    return modifier(this.SchemaModel.find(queryGenerator(query)).lean())
+    const q = queryGenerator(query);
+    return Missing.aggregate(q)
       .execAsync();
   }
 
