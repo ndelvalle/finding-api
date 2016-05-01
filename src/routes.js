@@ -33,4 +33,4 @@ router.route('/missing/:id')
 router.route('/missing')
   .post(missing.create.bind(missing));
 
-module.exports = router;
+export default router;
