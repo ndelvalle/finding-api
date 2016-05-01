@@ -26,7 +26,8 @@ app.use(morgan('tiny'));
 app.use(middlewares.cors.default);
 app.use('/', routes);
 
-app.listen(port);
-console.log(`Magic happens on port ${port}`); // eslint-disable-line no-console
+app.listen(port, () => {
+  console.log(`Magic happens on port ${port}`); // eslint-disable-line no-console
+});
 
-module.exports = app;
+export default app;
