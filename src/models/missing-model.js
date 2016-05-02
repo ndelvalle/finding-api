@@ -1,13 +1,19 @@
+import { map } from 'lodash';
 import Model from '../libraries/model';
 import Missing from '../schemas/missing-schema';
-import { missing as queryGenerator } from '../helper/query-generator';
+import { missing as queryGenerator } from '../helper/query-helper';
 import ImageUploader from '../libraries/image-uploader';
 
 class MissingModel extends Model {
   find(query) {
     const q = queryGenerator(query);
     return Missing.aggregate(q)
-      .execAsync();
+    .execAsync()
+    .then((docs) => map(docs, (doc) => {
+      const mappedDoc = doc;
+      mappedDoc.distance = doc.distance.toFixed(1);
+      return doc;
+    }));
   }
 
   create(input) {
