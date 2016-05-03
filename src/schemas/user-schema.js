@@ -39,4 +39,4 @@ UserSchema.pre('save', next => {
   .catch(err => next(err));
 });
 
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.model('User', UserSchema);
