@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import GeoSchema from './geo-schema';
 import PhotoSchema from './photo-schema';
+import ContactSchema from './contact-schema';
 
 const Schema = mongoose.Schema;
 
@@ -58,6 +59,8 @@ const MissingSchema = new Schema({
   },
 
   geo: GeoSchema,
+
+  contact: ContactSchema,
 
   createdAt: {
     type: Date,
