@@ -11,7 +11,7 @@ export default class Controller {
   }
 
   findOne(req, res, next) {
-    this.model.findOne()
+    this.model.findOne(req.id)
     .then(doc => res.status(200).json(doc))
     .catch(err => next(err));
   }
