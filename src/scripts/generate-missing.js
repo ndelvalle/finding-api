@@ -13,19 +13,16 @@ const AMOUNT = 20;
 
 function generateGeo() {
   return {
-    loc: [-110.8571443, 32.4586858],
-    name: 'AlleyNYC',
-    line1: '500 7th Ave',
-    line2: 'Floor 17A',
-    neighborhood: 'Midtown',
-    sublocality: 'Manhattan',
-    city: 'New York',
-    postalCode: '10018',
-    stateCode: 'NY',
-    state: 'New York',
-    countryCode: 'US',
-    country: 'United States',
-    timezone: 'America/New_York',
+    loc: [-58.5168854, -34.5340785],
+    address: 'Maquinista Carregal 1980',
+    neighborhood: 'Florida',
+    sublocality: 'Vicente Lopez',
+    city: 'Buenos Aires',
+    postalCode: '1602',
+    stateCode: 'BSAS',
+    state: 'Buenos Aires',
+    countryCode: 'AR',
+    country: 'Argentina',
   };
 }
 
