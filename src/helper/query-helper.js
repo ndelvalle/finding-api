@@ -1,14 +1,7 @@
-import { each } from 'lodash';
+import { omit } from 'lodash';
 import { EARTHRADIUS, kmToRadians } from './distance-helper';
 
-function removeFromObj(obj, attr) {
-  const objet = obj;
-  each(attr, (attribute) => delete objet[attribute]);
-}
-
 export function missing(q) {
-  if (!q) return q;
-
   const latitude = Number(q.lat) || -38.416097; // Argentina coordinates
   const longitude = Number(q.lng) || -63.616672;
   const radius = kmToRadians(Number(q.radius) || 5000); // 5000km default
@@ -16,7 +9,10 @@ export function missing(q) {
   const limit = Number(q.limit) || 25;
   const skip = Number(q.skip) || 0;
 
-  removeFromObj(q, ['lat', 'lng', 'limit', 'skip', 'radius']);
+  const query = omit(q, ['lat', 'lng', 'limit', 'skip', 'radius']);
+
+  query.isBrowsable = true;
+  query.isMissing = true;
 
   const aggregationPipelines = [{
     $geoNear: {
@@ -25,7 +21,7 @@ export function missing(q) {
       distanceField: 'distance',
       distanceMultiplier: EARTHRADIUS,
       maxDistance: radius,
-      query: q,
+      query,
     },
   }, {
     $skip: skip,
