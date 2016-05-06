@@ -21,14 +21,17 @@ router.route('/authenticate')
 router.route('/missing')
   .get(missing.find.bind(missing));
 
+router.route('/missing/stats')
+  .get(missing.stats.bind(missing));
+
 router.route('/missing/:id')
   .get(missing.findOne.bind(missing));
 
-router.route('/request')
+router.route('/requests')
   .get(request.find.bind(request))
   .post(request.create.bind(request));
 
-router.route('/request/:id')
+router.route('/requests/:id')
   .put(request.update.bind(request))
   .get(request.findOne.bind(request))
   .delete(request.remove.bind(request));
