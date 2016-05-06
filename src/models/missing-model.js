@@ -1,10 +1,12 @@
+import Promise from 'bluebird';
 import { map } from 'lodash';
-import Model from '../libraries/model';
-import Missing from '../schemas/missing-schema';
 import { missing as queryGenerator } from '../helper/query-helper';
 import ImageUploader from '../libraries/image-uploader';
+import Model from '../libraries/model';
+import Missing from '../schemas/missing-schema';
 
 class MissingModel extends Model {
+
   find(query) {
     const q = queryGenerator(query);
     return Missing.aggregate(q)
@@ -12,7 +14,7 @@ class MissingModel extends Model {
     .then((docs) => map(docs, (doc) => {
       const mappedDoc = doc;
       mappedDoc.distance = doc.distance.toFixed(1);
-      return doc;
+      return mappedDoc;
     }));
   }
 
@@ -34,6 +36,21 @@ class MissingModel extends Model {
       return this.update(missingRef._id, { photos });
     });
   }
+
+  stats() {
+    return Promise.all([
+      this.SchemaModel.countAsync(),
+      this.SchemaModel.distinct('geo'),
+    ])
+    .then(res => {
+      const response = {
+        count: res[0],
+        distinctLocs: res[1],
+      };
+      return response;
+    });
+  }
+
 }
 
 export default new MissingModel(Missing);
