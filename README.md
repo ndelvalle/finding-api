@@ -3,11 +3,11 @@
 [![bitHound Dev Dependencies](https://www.bithound.io/github/AlertaSolidaria/api/badges/devDependencies.svg)](https://www.bithound.io/github/AlertaSolidaria/api/master/dependencies/npm)
 [![bitHound Code](https://www.bithound.io/github/AlertaSolidaria/api/badges/code.svg)](https://www.bithound.io/github/AlertaSolidaria/api)
 
-# missing-api 
+# API
 
 ### Install
 ```
-$ git clone https://github.com/keepers/missing-api.git
+$ git clone https://github.com/AlertaSolidaria/api
 $ cd missing-api
 $ npm install
 ```
@@ -15,6 +15,6 @@ $ npm install
 ### Run
 ```
 $ mongod
-$ cd missing-api
+$ cd api
 $ npm run dev
 ```
