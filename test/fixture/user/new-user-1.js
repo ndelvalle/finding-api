@@ -1,3 +1,4 @@
+
 const newUser1 = {
   username: 'foobar',
   password: 'foobaz'

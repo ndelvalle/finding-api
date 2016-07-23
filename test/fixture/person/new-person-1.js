@@ -1,3 +1,4 @@
+
 const newPerson1 = {
   name       : 'Nicolas Del Valle',
   age        : 24,

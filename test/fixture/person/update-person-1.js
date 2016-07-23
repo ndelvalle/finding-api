@@ -1,7 +1,5 @@
-const ObjectId = require('mongodb').ObjectId;
 
 const person1 = {
-  _id        : new ObjectId('12a3d077c143c921072e342a'),
   name       : 'Nicolas Del Valle',
   age        : 24,
   gender     : 'M',
