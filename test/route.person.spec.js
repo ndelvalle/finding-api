@@ -14,6 +14,7 @@ const updatePerson1Fixture = require('./fixture/person/update-person-1.js');
 const api        = require('../');
 const connection = api.database.mongoose.connection;
 
+
 request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('Person Routes', () => {
@@ -58,27 +59,27 @@ describe('Person Routes', () => {
       });
     });
 
-    // it('responds with the newly created person document and a 201 status code', (cb) => {
-    //   request.post('/person', { json: newPerson1Fixture }, (err, clientRes) => {
-    //     if (err) { return cb(err); }
-    //
-    //     clientRes.body.lastSeenAt = new Date(clientRes.body.lastSeenAt);
-    //
-    //     assert.equal(clientRes.statusCode, 201);
-    //     assertContains(clientRes.body, Object.assign({}, newPerson1Fixture));
-    //     cb(null);
-    //   });
-    // });
-    //
-    // it('responds with a 400 error if the body of the request does not align with the person schema', (cb) => {
-    //   request.post('/person', { json: { foo: 'bar' } }, (err, clientRes) => {
-    //     if (err) { return cb(err); }
-    //
-    //     assert.equal(clientRes.statusCode, 400);
-    //     assert.ok(clientRes.body.match(/ValidationError/));
-    //     cb(null);
-    //   });
-    // });
+    it('responds with the newly created person document and a 201 status code', (cb) => {
+      request.post('/person', { json: newPerson1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        clientRes.body.lastSeenAt = new Date(clientRes.body.lastSeenAt);
+
+        assert.equal(clientRes.statusCode, 201);
+        assertContains(clientRes.body, Object.assign({}, newPerson1Fixture));
+        cb(null);
+      });
+    });
+
+    it('responds with a 400 error if the body of the request does not align with the person schema', (cb) => {
+      request.post('/person', { json: { foo: 'bar' } }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 400);
+        assert.ok(clientRes.body.match(/ValidationError/));
+        cb(null);
+      });
+    });
   });
 
   describe('Query People Route - GET /', () => {
