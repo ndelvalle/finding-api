@@ -40,7 +40,7 @@ function auth0Callback(req, res, next) {
   }
 
   // TODO: Check what should be send as response.
-  res.send(req.user);
+  res.json(req.user);
 }
 
 function auth0FailedCallback(req, res, next) {
@@ -49,11 +49,11 @@ function auth0FailedCallback(req, res, next) {
   }
 
   // TODO: Check what should be send as response.
-  res.send(req.user);
+  res.json(req.user);
 }
 
 
-router.post('/',           authenticate);
+router.post('/',            authenticate);
 router.get( '/db-callback', auth0Callback);
 router.get( '/db-fail',     auth0FailedCallback);
 

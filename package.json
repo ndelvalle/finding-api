@@ -15,6 +15,7 @@
     "debug-start": "node-debug ./bin/api",
     "debug-test": "node-debug _mocha test/*.spec.js",
     "cover": "istanbul cover _mocha test/*.spec.js",
+    "check-cover": "open coverage/lcov-report/index.html",
     "eslint": "eslint . --ext .js",
     "explain-config": "./bin/api-explain-config"
   },
