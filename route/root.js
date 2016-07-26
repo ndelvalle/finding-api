@@ -4,6 +4,7 @@ const router = new Router();
 
 
 function getRoot(req, res, next) {
+  console.log(req.user);
   req.logger.verbose('Responding to root request');
   req.logger.verbose('Sending response to client');
   res.send({
