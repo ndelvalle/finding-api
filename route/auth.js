@@ -1,7 +1,6 @@
 const Router   = require('express').Router;
 const router   = new Router();
 const request  = require('request');
-const passport = require('passport');
 
 
 function authenticate(req, res, next) {
@@ -23,7 +22,7 @@ function authenticate(req, res, next) {
     scope     : auth0.scope
   };
 
-  request.post(auth0.authURL, { auth0Body }, (err, clientRes, body) => {
+  request.post(auth0.authURL, { json: auth0Body }, (err, clientRes, body) => {
     if (err && clientRes.statusCode !== 200) {
       return next(err || new Error(body));
     }
@@ -54,11 +53,9 @@ function auth0FailedCallback(req, res, next) {
 }
 
 
-router.get('/db-callback',
-  passport.authenticate('auth0', { failureRedirect: '/url-if-something-fails' }),
-  auth0Callback);
-router.get('/db-fail', auth0FailedCallback);
-router.post('/', authenticate);
+router.post('/',           authenticate);
+router.get('/db-callback', auth0Callback);
+router.get('/db-fail',     auth0FailedCallback);
 
 
 module.exports = router;
