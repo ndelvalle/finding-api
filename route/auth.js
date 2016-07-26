@@ -10,7 +10,7 @@ function authenticate(req, res, next) {
   const password = req.body.password;
 
   if (!username || !password) {
-    return res.send(400, 'Missing username and/or password parameters.').end();
+    return res.status(400).send('Missing username and/or password parameters.').end();
   }
 
   const auth0     = req.config.auth0;
@@ -23,13 +23,13 @@ function authenticate(req, res, next) {
   };
 
   request.post(auth0.authURL, { json: auth0Body }, (err, clientRes, body) => {
-    if (err && clientRes.statusCode !== 200) {
+    if (err || clientRes.statusCode !== 200) {
       return next(err || new Error(body));
     }
 
     req.logger.verbose('Sending user token to client');
 
-    res.send(200, body);
+    res.status(200).send(body);
   });
 }
 
