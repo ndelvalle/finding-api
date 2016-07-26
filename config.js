@@ -1,4 +1,3 @@
-require('dotenv').config();
 const milieu = require('milieu');
 
 const config = milieu('api', {
