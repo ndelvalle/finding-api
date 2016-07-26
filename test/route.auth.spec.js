@@ -3,9 +3,9 @@
 require('./config.js');
 require('./mock/jwt.js');
 
-let request          = require('request');
-const assert         = require('assert');
-const nock           = require('nock');
+let request  = require('request');
+const assert = require('assert');
+const nock   = require('nock');
 
 const token1 = require('./fixture/auth0/token-1');
 const error1 = require('./fixture/auth0/error-1');

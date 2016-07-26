@@ -25,6 +25,7 @@ function authenticate(req, res, next) {
   request.post(auth0.authURL, { json: auth0Body }, (err, clientRes, body) => {
     if (err || clientRes.statusCode !== 200) {
       if (clientRes.statusCode === 401) { return res.status(401).send(body).end(); }
+
       return next(err || new Error(body));
     }
 
