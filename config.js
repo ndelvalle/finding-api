@@ -3,7 +3,7 @@ const milieu = require('milieu');
 
 const config = milieu('api', {
   server: {
-    url            : 'http://localhost:8000',
+    url            : 'http://localhost:9000',
     maxResultsLimit: 1000
   },
   mongo: {
