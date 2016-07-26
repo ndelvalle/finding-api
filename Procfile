@@ -1,1 +1,1 @@
-web: sh bin/api
+web: ./bin/api
