@@ -2,6 +2,7 @@
 /* global describe it before beforeEach after */
 
 require('./config.js');
+require('./mock/jwt.js');
 
 let   request        = require('request');
 const assert         = require('assert');
@@ -23,14 +24,14 @@ describe('Person Routes', () => {
   beforeEach((cb) => connection.db.collection('people').remove({}, cb));
   after((cb) => api.stop(cb));
 
-
   describe('Create Person Route - POST /', () => {
-    it('creates a person document in the database', (cb) => {
+    it.only('creates a person document in the database', (cb) => {
       request.post('/person', { json: newPerson1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
         connection.db.collection('people').find({}).toArray((err, people) => {
           if (err) { return cb(err); }
+          console.log(clientRes.body);
 
           assert.equal(people.length, 1);
 

@@ -54,8 +54,8 @@ function auth0FailedCallback(req, res, next) {
 
 
 router.post('/',           authenticate);
-router.get('/db-callback', auth0Callback);
-router.get('/db-fail',     auth0FailedCallback);
+router.get( '/db-callback', auth0Callback);
+router.get( '/db-fail',     auth0FailedCallback);
 
 
 module.exports = router;
