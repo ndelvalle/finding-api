@@ -25,13 +25,12 @@ describe('Person Routes', () => {
   after((cb) => api.stop(cb));
 
   describe('Create Person Route - POST /', () => {
-    it.only('creates a person document in the database', (cb) => {
+    it('creates a person document in the database', (cb) => {
       request.post('/person', { json: newPerson1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
         connection.db.collection('people').find({}).toArray((err, people) => {
           if (err) { return cb(err); }
-          console.log(clientRes.body);
 
           assert.equal(people.length, 1);
 
@@ -40,6 +39,18 @@ describe('Person Routes', () => {
           clientRes.body.lastSeenAt = new Date(clientRes.body.lastSeenAt);
           clientRes.body.createdAt  = new Date(clientRes.body.createdAt);
           clientRes.body.updatedAt  = new Date(clientRes.body.updatedAt);
+
+          clientRes.body.contacts = clientRes.body.contacts.map(contact => {
+            contact.createdAt = new Date(contact.createdAt);
+            contact.updatedAt = new Date(contact.updatedAt);
+            return contact;
+          });
+
+          clientRes.body.photos = clientRes.body.photos.map(photo => {
+            photo.createdAt = new Date(photo.createdAt);
+            photo.updatedAt = new Date(photo.updatedAt);
+            return photo;
+          });
 
           person._id = person._id.toString();
 
