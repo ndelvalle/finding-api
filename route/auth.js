@@ -23,11 +23,8 @@ function authenticate(req, res, next) {
   };
 
   request.post(auth0.authURL, { json: auth0Body }, (err, clientRes, body) => {
-    if (err || clientRes.statusCode !== 200) {
-      if (clientRes.statusCode === 401) { return res.status(401).send(body).end(); }
-
-      return next(err || new Error(body));
-    }
+    if (err) { return next(err); }
+    if (clientRes.statusCode !== 200) { return res.status(401).send(body).end(); }
 
     req.logger.verbose('Sending user token to client');
 
