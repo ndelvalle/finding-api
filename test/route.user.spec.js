@@ -2,6 +2,7 @@
 /* global describe it before beforeEach after */
 
 require('./config.js');
+require('./mock/jwt.js');
 
 let   request        = require('request');
 const assert         = require('assert');
