@@ -3,9 +3,13 @@
 require('./config.js');
 require('./mock/jwt.js');
 
-let request  = require('request');
-const assert = require('assert');
-// const sinon  = require('sinon');
+let request          = require('request');
+const assert         = require('assert');
+const nock           = require('nock');
+
+const token1 = require('./fixture/auth0/token-1');
+const error1 = require('./fixture/auth0/error-1');
+const user1  = require('./fixture/auth0/user-1');
 
 const api = require('../');
 
@@ -21,6 +25,52 @@ describe('Auth Routes', () => {
     cb(null);
   });
   after( (cb) => api.stop(cb));
+
+  describe('DB Auth - GET /auth', () => {
+
+    const auth0Nochk = nock('https://keepers-co.auth0.com').post('/oauth/ro');
+
+    it('responds with a 200 code and a user token object', (cb) => {
+      const authd = auth0Nochk.reply(200, token1);
+
+      request.post('/auth', { json: user1 }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 200);
+        assert.equal(clientRes.body.token_id, token1.token_id);
+        assert.equal(clientRes.body.tokenType, token1.token_type);
+        assert.equal(clientRes.body.accessToken, token1.access_token);
+
+        authd.done();
+        cb(null);
+      });
+    });
+
+    it('responds with a 400 error when password or username are missing', (cb) => {
+      request.post('/auth', (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 400);
+
+        cb(null);
+      });
+    });
+
+    it('responds with a 401 code when wron username or password', (cb) => {
+      const authd = auth0Nochk.reply(401, error1);
+
+      request.post('/auth', { json: user1 }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 401);
+        assert.equal(clientRes.body.error, error1.error);
+        assert.equal(clientRes.body.errorDescription, error1.error_description);
+
+        authd.done();
+        cb(null);
+      });
+    });
+  });
 
   describe('DB Auth Fail Callback - GET /auth/db-fail', () => {
     it('responds with a 200 code and a session user object', (cb) => {
