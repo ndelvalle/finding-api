@@ -9,7 +9,7 @@
     "api-explain-config": "./bin/api-explain-config"
   },
   "scripts": {
-    "start": "node ./bin/api",
+    "start": "./bin/api",
     "dev": "nodemon -r dotenv/config ./bin/api",
     "test": "mocha --bail test/*.spec.js",
     "debug-start": "node-debug ./bin/api",
@@ -50,7 +50,6 @@
     "istanbul": "^0.4.4",
     "methods": "^1.1.2",
     "mocha": "^2.5.3",
-    "mocha-bamboo-reporter": "^1.1.1",
     "mongodb": "^2.2.4",
     "node-inspector": "^0.12.8",
     "nodemon": "^1.10.0",
