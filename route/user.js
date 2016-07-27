@@ -4,12 +4,14 @@ const router = new Router();
 
 function createUser(req, res, next) {
   req.logger.info('Creating user', req.body);
-  req.model('User').create(req.body, (err, user) => {
-    if (err) { return next(err); }
 
-    req.logger.verbose('Sending user to client');
-    res.sendCreated(user);
-  });
+  req.auth0.management.users
+    .create(req.body)
+    .then(clientRes => {
+      req.logger.verbose('Sending user to client');
+      return res.send(clientRes);
+    })
+    .catch(err => res.status(err.statusCode).send(err));
 }
 
 function queryUsers(req, res, next) {
