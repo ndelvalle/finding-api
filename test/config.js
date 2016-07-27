@@ -7,5 +7,6 @@ config.logger     = {};
 
 config.auth0.clientID     = 'aaa';
 config.auth0.clientSecret = 'bbb';
+config.auth0.token        = 'ccc';
 
 module.exports = config;

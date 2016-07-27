@@ -1,6 +1,8 @@
 /* eslint-disable max-len */
 /* global describe it before beforeEach after */
 
+// TODO: refactor mocks and add test cases for wrong paths
+
 require('./config.js');
 require('./mock/jwt.js');
 
