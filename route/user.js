@@ -9,7 +9,7 @@ function createUser(req, res, next) {
     .create(req.body)
     .then(user => {
       req.logger.verbose('Created user with id %s', user.userId);
-      return res.send(user);
+      return res.status(201).send(user);
     })
     .catch(err => res.status(err.statusCode).send(err));
 }
@@ -19,7 +19,7 @@ function queryUsers(req, res, next) {
 
   const params = {
     per_page: req.query.perPage ? parseInt(req.query.perPage, 10) : 50,
-    page    : req.query.page ? parseInt(req.query.page, 10)       : 0
+    page    : req.query.page    ? parseInt(req.query.page, 10)    : 0
   };
 
   if (req.query.q) {
@@ -57,7 +57,7 @@ function updateUserById(req, res, next) {
     .update({ id }, req.body)
     .then(user => {
       req.logger.verbose('Updated user with id %s', id);
-      return res.send(user);
+      return res.status(204).send(user);
     })
     .catch(err => res.status(err.statusCode).send(err));
 
@@ -72,7 +72,7 @@ function removeUserById(req, res, next) {
     .delete({ id })
     .then(user => {
       req.logger.verbose('Removed user with id %s', id);
-      return res.send(user);
+      return res.status(204).send(user);
     })
     .catch(err => res.status(err.statusCode).send(err));
 }

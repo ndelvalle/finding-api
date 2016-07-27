@@ -6,7 +6,6 @@ require('./mock/jwt.js');
 
 let   request        = require('request');
 const assert         = require('assert');
-const assertContains = require('assert-contains');
 const sinon          = require('sinon');
 
 const newUser1Fixture    = require('./fixture/user/new-user-1.js');
@@ -15,27 +14,57 @@ const updateUser1Fixture = require('./fixture/user/update-user-1.js');
 
 const api        = require('../');
 const connection = api.database.mongoose.connection;
+const users      = api.server.expressApp.request.auth0.management.users;
 
 request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('User Routes', () => {
 
-  before((cb) => {
-    api.start(cb);
-  });
-  beforeEach((cb) => connection.db.collection('users').remove({}, cb));
-  after((cb) => api.stop(cb));
+  before(cb => api.start(cb));
+  beforeEach(cb => connection.db.collection('users').remove({}, cb));
+  after(cb => api.stop(cb));
 
 
   describe('Create User Route - POST /', () => {
-    it.only('creates a new user in Auth0', (cb) => {
-
-      const stub = sinon.stub(api.server.expressApp.request.auth0.management.users, 'create', () => Promise.resolve(user1Fixture));
+    it('creates a new user in Auth0 and responds with 201 status code', cb => {
+      const stub = sinon.stub(users, 'create', () => Promise.resolve(user1Fixture));
 
       request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
         const user = clientRes.body;
+
+        assert.equal(clientRes.statusCode, 201);
+        assert.equal(user.email, newUser1Fixture.email);
+        assert.equal(user.password, undefined);
+
+        stub.restore();
+        cb(null);
+      });
+    });
+
+    it.skip('responds with a 400 error if the body of the request does not align with auth0 parameters', cb => {
+      const stub = sinon.stub(users, 'create', () => { throw new Error({ statusCode: 900, name: 'something' }); });
+
+      request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 400);
+
+        stub.restore();
+        cb(null);
+      });
+    });
+  });
+
+  describe('Query User Route - GET /', () => {
+    it('searches for users in Auth0 in the database and responds with a 200 status code', cb => {
+      const stub = sinon.stub(users, 'getAll', () => Promise.resolve([user1Fixture]));
+
+      request.get('/user', { json: true }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        const user = clientRes.body[0];
 
         assert.equal(clientRes.statusCode, 200);
         assert.equal(user.email, newUser1Fixture.email);
@@ -45,80 +74,40 @@ describe('User Routes', () => {
         cb(null);
       });
     });
-
-    it('responds with the newly created user document and a 201 status code', (cb) => {
-      request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
-        if (err) { return cb(err); }
-
-        assert.equal(clientRes.statusCode, 201);
-        assertContains(clientRes.body, Object.assign({}, newUser1Fixture, { password: undefined }));
-        cb(null);
-      });
-    });
-
-    it('responds with a 400 error if the body of the request does not align with the user schema', (cb) => {
-      request.post('/user', { json: { foo: 'bar' } }, (err, clientRes) => {
-        if (err) { return cb(err); }
-
-        assert.equal(clientRes.statusCode, 400);
-        assert.ok(clientRes.body.match(/ValidationError/));
-        cb(null);
-      });
-    });
-  });
-
-  describe('Query User Route - GET /', () => {
-    beforeEach( (cb) => connection.db.collection('users').insertOne(user1Fixture, cb));
-
-    it('searches for users documents in the database', (cb) => {
-      request.get('/user', { json: true }, (err, clientRes) => {
-        if (err) { return cb(err); }
-
-        assertContains(clientRes.body, [
-          Object.assign({}, newUser1Fixture, { password: undefined })
-        ]);
-
-        cb(null);
-      });
-    });
   });
 
   describe('Get User Route - GET /:id', () => {
-    beforeEach( (cb) => connection.db.collection('users').insertOne(user1Fixture, cb));
+    it('retrieves a user from Auth0 in the database and responds with a 200 status code', cb => {
+      const stub = sinon.stub(users, 'get', () => Promise.resolve(user1Fixture));
 
-    it('retrieves a user document in the database', (cb) => {
-      request.get(`user/${user1Fixture._id.toString()}`, { json: true }, (err, clientRes) => {
+      request.get(`user/${user1Fixture.userId}`, { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        assertContains(clientRes.body, Object.assign({}, newUser1Fixture, { password: undefined }));
+        assert.equal(clientRes.statusCode, 200);
+        assert.equal(clientRes.body.email, newUser1Fixture.email);
+        assert.equal(clientRes.body.password, undefined);
 
+        stub.restore();
         cb(null);
       });
     });
   });
 
   describe('Update User by Id Route - PUT /:id', () => {
-    it('updates a document by id and responds with a 204', (cb) => {
-      connection.db.collection('users').insertOne(user1Fixture, (err) => {
+    it('updates a user from Auth0 by id and responds with a 204 status code', cb => {
+      const stub = sinon.stub(users, 'update', () => Promise.resolve(user1Fixture));
+
+      request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        request.put(`user/${user1Fixture._id.toString()}`, { json: updateUser1Fixture }, (err, clientRes) => {
-          if (err) { return cb(err); }
+        assert.equal(clientRes.statusCode, 204);
 
-          assert.equal(clientRes.statusCode, 204);
-
-          connection.db.collection('users').findOne({ _id: user1Fixture._id }, (err, user) => {
-            if (err) { return cb(err); }
-
-            assertContains(user, Object.assign({}, updateUser1Fixture, { password: undefined }));
-
-            cb(null);
-          });
-        });
+        stub.restore();
+        cb(null);
       });
     });
 
-    it('responds with a 404 error if a document does not exist with the given id', (cb) => {
+    it.skip('responds with a 404 error if a document does not exist with the given id', cb => {
       connection.db.collection('users').insertOne(user1Fixture, (err) => {
         if (err) { return cb(err); }
 
@@ -133,46 +122,18 @@ describe('User Routes', () => {
   });
 
   describe('Remove User Route - DELETE /:id', () => {
-    beforeEach( (cb) => connection.db.collection('users').insertOne(user1Fixture, cb));
+    const stub = sinon.stub(users, 'delete', () => Promise.resolve(user1Fixture));
 
-    it('removes a user document from the database', (cb) => {
-      request.delete(`user/${user1Fixture._id.toString()}`, (err, clientRes) => {
+    it('removes a user document from the database and responds with a 204 status code', cb => {
+      request.delete(`user/${user1Fixture.userId}`, (err, clientRes) => {
         if (err) { return cb(err); }
 
         assert.equal(clientRes.statusCode, 204);
 
-        connection.db.collection('users').findOne({ _id: user1Fixture._id }, (err, user) => {
-          if (err) { return cb(err); }
-
-          assert.ok(user.removedAt instanceof Date);
-          cb(null);
-        });
+        stub.restore();
+        cb(null);
       });
     });
   });
 
-  describe('Restore User Route - POST /restore/:id', () => {
-    beforeEach( (cb) => {
-      connection.db.collection('users').insertOne(
-        Object.assign({}, user1Fixture, { removedAt: new Date() }),
-        cb
-      );
-    });
-
-    it('restores a user document in the database', (cb) => {
-      request.post(`user/restore/${user1Fixture._id.toString()}`, (err, clientRes) => {
-        if (err) { return cb(err); }
-
-        assert.equal(clientRes.statusCode, 204);
-
-        connection.db.collection('users').findOne({ _id: user1Fixture._id }, (err, user) => {
-          if (err) { return cb(err); }
-
-          assert.ok(!user.removedAt);
-
-          cb(null);
-        });
-      });
-    });
-  });
 });
