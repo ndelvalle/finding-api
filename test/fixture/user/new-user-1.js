@@ -1,7 +1,7 @@
-
 const newUser1 = {
-  username: 'foobar',
-  password: 'foobaz'
+  connection: 'Username-Password-Authentication',
+  email: 'test@keepe.rs',
+  password: 'secret'
 };
 
 
