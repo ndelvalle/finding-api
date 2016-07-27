@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-/* global describe it before beforeEach after */
+/* global describe it before after */
 
 // TODO: refactor mocks and add test cases for wrong paths
 
@@ -23,13 +23,12 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 describe('User Routes', () => {
 
   before(cb => api.start(cb));
-  beforeEach(cb => connection.db.collection('users').remove({}, cb));
   after(cb => api.stop(cb));
 
 
   describe('Create User Route - POST /', () => {
     it('creates a new user in Auth0 and responds with 201 status code', cb => {
-      const stub = sinon.stub(users, 'create', () => Promise.resolve(user1Fixture));
+      sinon.stub(users, 'create', () => Promise.resolve(user1Fixture));
 
       request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
@@ -40,20 +39,20 @@ describe('User Routes', () => {
         assert.equal(user.email, newUser1Fixture.email);
         assert.equal(user.password, undefined);
 
-        stub.restore();
+        users.create.restore();
         cb(null);
       });
     });
 
     it.skip('responds with a 400 error if the body of the request does not align with auth0 parameters', cb => {
-      const stub = sinon.stub(users, 'create', () => { throw new Error({ statusCode: 900, name: 'something' }); });
+      sinon.stub(users, 'create', () => { throw new Error({ statusCode: 900, name: 'something' }); });
 
       request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
         assert.equal(clientRes.statusCode, 400);
 
-        stub.restore();
+        users.create.restore();
         cb(null);
       });
     });
@@ -61,7 +60,7 @@ describe('User Routes', () => {
 
   describe('Query User Route - GET /', () => {
     it('searches for users in Auth0 in the database and responds with a 200 status code', cb => {
-      const stub = sinon.stub(users, 'getAll', () => Promise.resolve([user1Fixture]));
+      sinon.stub(users, 'getAll', () => Promise.resolve([user1Fixture]));
 
       request.get('/user', { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
@@ -72,7 +71,7 @@ describe('User Routes', () => {
         assert.equal(user.email, newUser1Fixture.email);
         assert.equal(user.password, undefined);
 
-        stub.restore();
+        users.getAll.restore();
         cb(null);
       });
     });
@@ -80,7 +79,7 @@ describe('User Routes', () => {
 
   describe('Get User Route - GET /:id', () => {
     it('retrieves a user from Auth0 in the database and responds with a 200 status code', cb => {
-      const stub = sinon.stub(users, 'get', () => Promise.resolve(user1Fixture));
+      sinon.stub(users, 'get', () => Promise.resolve(user1Fixture));
 
       request.get(`user/${user1Fixture.userId}`, { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
@@ -89,7 +88,7 @@ describe('User Routes', () => {
         assert.equal(clientRes.body.email, newUser1Fixture.email);
         assert.equal(clientRes.body.password, undefined);
 
-        stub.restore();
+        users.get.restore();
         cb(null);
       });
     });
@@ -97,14 +96,14 @@ describe('User Routes', () => {
 
   describe('Update User by Id Route - PUT /:id', () => {
     it('updates a user from Auth0 by id and responds with a 204 status code', cb => {
-      const stub = sinon.stub(users, 'update', () => Promise.resolve(user1Fixture));
+      sinon.stub(users, 'update', () => Promise.resolve(user1Fixture));
 
       request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
         assert.equal(clientRes.statusCode, 204);
 
-        stub.restore();
+        users.update.restore();
         cb(null);
       });
     });
@@ -124,7 +123,7 @@ describe('User Routes', () => {
   });
 
   describe('Remove User Route - DELETE /:id', () => {
-    const stub = sinon.stub(users, 'delete', () => Promise.resolve(user1Fixture));
+    sinon.stub(users, 'delete', () => Promise.resolve(user1Fixture));
 
     it('removes a user document from the database and responds with a 204 status code', cb => {
       request.delete(`user/${user1Fixture.userId}`, (err, clientRes) => {
@@ -132,7 +131,7 @@ describe('User Routes', () => {
 
         assert.equal(clientRes.statusCode, 204);
 
-        stub.restore();
+        users.delete.restore();
         cb(null);
       });
     });
