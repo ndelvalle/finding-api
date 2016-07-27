@@ -7,6 +7,7 @@ require('./mock/jwt.js');
 let   request        = require('request');
 const assert         = require('assert');
 const assertContains = require('assert-contains');
+const sinon          = require('sinon');
 
 const newUser1Fixture    = require('./fixture/user/new-user-1.js');
 const user1Fixture       = require('./fixture/user/user-1.js');
@@ -19,26 +20,29 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('User Routes', () => {
 
-  before((cb) => api.start(cb));
+  before((cb) => {
+    api.start(cb);
+  });
   beforeEach((cb) => connection.db.collection('users').remove({}, cb));
   after((cb) => api.stop(cb));
 
 
   describe('Create User Route - POST /', () => {
-    it('creates a user document in the database', (cb) => {
+    it.only('creates a new user in Auth0', (cb) => {
+
+      const stub = sinon.stub(api.server.expressApp.request.auth0.management.users, 'create', () => Promise.resolve(user1Fixture));
+
       request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
-        connection.db.collection('users').find({}).toArray((err, users) => {
-          if (err) { return cb(err); }
 
-          assert.equal(users.length, 1);
+        const user = clientRes.body;
 
-          const user = users[0];
-          assert.equal(newUser1Fixture.username, user.username);
-          assert.notEqual(newUser1Fixture.password, user.password);
+        assert.equal(clientRes.statusCode, 200);
+        assert.equal(user.email, newUser1Fixture.email);
+        assert.equal(user.password, undefined);
 
-          cb(null);
-        });
+        stub.restore();
+        cb(null);
       });
     });
 
