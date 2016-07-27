@@ -26,6 +26,7 @@ const config = milieu('api', {
   auth0: {
     clientID    : process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    token       : process.env.AUTH0_TOKEN,
     domain      : 'keepers-co.auth0.com',
     callbackURL : '/auth/db-callback',
     authURL     : 'https://keepers-co.auth0.com/oauth/ro',
