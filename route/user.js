@@ -13,10 +13,11 @@ function createUser(req, res, next) {
 }
 
 function queryUsers(req, res, next) {
+  req.logger.info('Querying users', req.query);
+
   const params = {
     per_page: req.query.perPage ? parseInt(req.query.perPage, 10) : 50,
-    page    : req.query.page ? parseInt(req.query.page, 10)       : 0,
-    q       : req.query.q || null
+    page    : req.query.page ? parseInt(req.query.page, 10)       : 0
   };
 
   if (req.query.q) {
@@ -24,23 +25,26 @@ function queryUsers(req, res, next) {
     params.search_engine = 'v2';
   }
 
-  req.auth0.management
-    .getUsers(params)
-    .then(users => res.status(200).send(users))
-    .catch(err => res.status(500).send(err));
+  req.auth0.management.users
+    .getAll(params)
+    .then(users => {
+      req.logger.verbose('Sending users to client');
+      return res.status(200).send(users);
+    })
+    .catch(err => res.status(err.statusCode).send(err));
 }
 
 function findUserById(req, res, next) {
-  req.logger.info('Finding user with id %s', req.params.id);
-  req.model('User').findById(req.params.id)
-    .lean()
-    .exec((err, user) => {
-      if (err) { return next(err); }
-      if (!user) { return res.status(404).end(); }
+  const id = req.params.id;
+  req.logger.info('Finding user with id %s', id);
 
+  req.auth0.management.users
+    .get({ id })
+    .then(user => {
       req.logger.verbose('Sending user to client');
-      res.sendFound(user);
-    });
+      return res.status(200).send(user);
+    })
+    .catch(err => res.status(err.statusCode).send(err));
 }
 
 function updateUserById(req, res, next) {
@@ -91,12 +95,12 @@ function restoreUserById(req, res, next) {
   });
 }
 
-router.post(  '/',                  createUser);
-router.get(   '/',                  queryUsers);
-router.get(   '/:id([0-9a-f]{24})', findUserById);
-router.put(   '/:id',               updateUserById);
-router.delete('/:id',               removeUserById);
-router.post(  '/restore/:id',       restoreUserById);
+router.post(  '/',            createUser);
+router.get(   '/',            queryUsers);
+router.get(   '/:id',         findUserById);
+router.put(   '/:id',         updateUserById);
+router.delete('/:id',         removeUserById);
+router.post(  '/restore/:id', restoreUserById);
 
 
 module.exports = router;
