@@ -13,18 +13,21 @@ function createUser(req, res, next) {
 }
 
 function queryUsers(req, res, next) {
-  req.logger.info('Querying users', req.query);
-  req.model('User').countAndFind(req.query)
-    .skip(req.skip)
-    .limit(req.limit)
-    .sort(req.sort)
-    .lean()
-    .exec((err, users, userCount) => {
-      if (err) { return next(err); }
+  const params = {
+    per_page: req.query.perPage ? parseInt(req.query.perPage, 10) : 50,
+    page    : req.query.page ? parseInt(req.query.page, 10)       : 0,
+    q       : req.query.q || null
+  };
 
-      req.logger.verbose('Sending user to client');
-      res.sendQueried(users, userCount);
-    });
+  if (req.query.q) {
+    params.q = req.query.q;
+    params.search_engine = 'v2';
+  }
+
+  req.auth0.management
+    .getUsers(params)
+    .then(users => res.status(200).send(users))
+    .catch(err => res.status(500).send(err));
 }
 
 function findUserById(req, res, next) {
