@@ -3,7 +3,7 @@ const milieu = require('milieu');
 
 const config = milieu('api', {
   server: {
-    url            : 'http://localhost:8000',
+    port           : process.env.PORT || 8080,
     maxResultsLimit: 1000
   },
   mongo: {
