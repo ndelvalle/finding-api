@@ -22,7 +22,7 @@ describe('new Api(config, logger) -> api', () => {
         sinon.assert.calledOnce(api.database.connect);
         sinon.assert.calledOnce(api.server.listen);
 
-        assert.deepEqual(result, { url: 'http://localhost:8050' });
+        assert.deepEqual(result, { port: 8050 });
 
         cb(null);
       });
