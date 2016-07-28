@@ -12,5 +12,5 @@ const api = require('../');
 
 api.start((err, result) => {
   if (err) { throw err; }
-  api.logger.info('Listening for HTTP requests at %s', result.url);
+  api.logger.info('Listening for HTTP requests at port %s', result.port);
 });
