@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
 /* global describe it */
 
+const config = require('./config');
 const assert = require('assert');
 const sinon  = require('sinon');
 const Api    = require('../lib/api');
 const logger = require('./mock/logger');
-const config = require('./config');
 
 describe('new Api(config, logger) -> api', () => {
 

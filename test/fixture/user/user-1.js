@@ -1,9 +1,14 @@
-
-const User1 = {
-  username: 'foobar',
-  password: '$2a$10$zT9/wglteSc8mnAtdd4j.u0T8LINkBbkW1t29MUjYaEmpjHBSm4bq',
-  isAdmin : true
+const user1 = {
+  email        : 'test@keepe.rs',
+  emailVerified: false,
+  userId       : 'auth0|579817307de07f755e40ef4d',
+  nickname     : null,
+  identities   : [{
+    connection : 'Username-Password-Authentication',
+    userId     : '579817307de07f755e40ef4d',
+    provider   : 'auth0',
+    isSocial   : false
+  }]
 };
 
-
-module.exports = User1;
+module.exports = user1;
