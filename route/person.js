@@ -8,8 +8,17 @@ function createPerson(req, res, next) {
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending person to client');
-    res.sendCreated(person);
+    req.upload(req.body.photos[0].data, person._id, 1, (err, url) => {
+      if (err) { return next(err); }
+
+      person.photos = [{ url, order: 0 }];
+      person.save((err, person) => {
+        if (err) { return next(err); }
+
+        req.logger.verbose('Sending person to client');
+        res.sendCreated(person);
+      });
+    });
   });
 }
 
