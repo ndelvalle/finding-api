@@ -1,5 +1,6 @@
 const Router = require('express').Router;
 const jwt    = require('../lib/jwt');
+const async  = require('async');
 const router = new Router();
 
 
@@ -8,10 +9,18 @@ function createPerson(req, res, next) {
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 
-    req.upload(req.body.photos[0].data, person._id, 1, (err, url) => {
+    req.logger.verbose('Uploading person photos');
+    async.map(req.body.photos, (item, cb) => {
+      req.upload(item.data, person._id, item.order, cb);
+    }, (err, urls) => {
       if (err) { return next(err); }
 
-      person.photos = [{ url, order: 0 }];
+      person.photos = urls.map(x => {
+        const mapped = { url: x.url, order: x.name };
+        return mapped;
+      });
+
+      req.logger.verbose('Saving uploaded photos to person model');
       person.save((err, person) => {
         if (err) { return next(err); }
 
