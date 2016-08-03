@@ -1,5 +1,6 @@
-const jwt    = require('../lib/jwt');
 const Router = require('express').Router;
+const jwt    = require('../lib/jwt');
+const async  = require('async');
 const router = new Router();
 
 
@@ -8,8 +9,25 @@ function createPerson(req, res, next) {
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending person to client');
-    res.sendCreated(person);
+    req.logger.verbose('Uploading person photos');
+    async.map(req.body.photos, (item, cb) => {
+      req.upload(item.data, person._id, item.order, cb);
+    }, (err, urls) => {
+      if (err) { return next(err); }
+
+      person.photos = urls.map(x => {
+        const mapped = { url: x.url, order: x.name };
+        return mapped;
+      });
+
+      req.logger.verbose('Saving uploaded photos to person model');
+      person.save((err, person) => {
+        if (err) { return next(err); }
+
+        req.logger.verbose('Sending person to client');
+        res.sendCreated(person);
+      });
+    });
   });
 }
 
@@ -101,13 +119,13 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.post(  '/', jwt.auth,                createPerson);
+router.post(  '/',                          jwt.auth, createPerson);
 router.get(   '/',                          queryPeople);
 router.get(   '/near/:longitude/:latitude', queryPeopleByGeolocation);
 router.get(   '/:id([0-9a-f]{24})',         findPersonById);
-router.put(   '/:id', jwt.auth,             updatePersonById);
-router.delete('/:id', jwt.auth,             removePersonById);
-router.post(  '/restore/:id', jwt.auth,     restorePersonById);
+router.put(   '/:id',                       jwt.auth, updatePersonById);
+router.delete('/:id',                       jwt.auth, removePersonById);
+router.post(  '/restore/:id',               jwt.auth, restorePersonById);
 
 
 module.exports = router;

@@ -32,6 +32,12 @@ const config = milieu('api', {
     authURL     : 'https://keepers-co.auth0.com/oauth/ro',
     connections : { db: 'Username-Password-Authentication' },
     scope       : 'openid name email'
+  },
+  AWS: {
+    accessKeyId    : process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region         : process.env.AWS_REGION,
+    bucket         : process.env.AWS_BUCKET
   }
 });
 
