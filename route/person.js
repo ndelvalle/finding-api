@@ -33,29 +33,29 @@ function createPerson(req, res, next) {
 }
 
 function queryPerson(req, res, next) {
-  req.logger.info('Querying person', req.query);
+  req.logger.info('Querying persons', req.query);
   req.model('Person').countAndFind(req.query)
     .skip(req.skip)
     .limit(req.limit)
     .sort(req.sort)
     .lean()
-    .exec((err, person, personCount) => {
+    .exec((err, persons, personsCount) => {
       if (err) { return next(err); }
 
-      req.logger.verbose('Sending person to client');
-      res.sendQueried(person, personCount);
+      req.logger.verbose('Sending persons to client');
+      res.sendQueried(persons, personsCount);
     });
 }
 
 function queryPersonByGeolocation(req, res, next) {
-  req.logger.info('Querying person by geolocation', req.query);
+  req.logger.info('Querying persons by geolocation', req.query);
 
   const location = { lng: req.params.longitude, lat: req.params.latitude };
-  req.model('Person').findByGeolocation(req.query, location, (err, person) => {
+  req.model('Person').findByGeolocation(req.query, location, (err, persons) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending person to client');
-    res.sendQueried(person);
+    req.logger.verbose('Sending persons to client');
+    res.sendQueried(persons);
   });
 }
 
