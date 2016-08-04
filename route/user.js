@@ -12,18 +12,30 @@ function createUser(req, res, next) {
     return res.status(400).send('Missing role parameter.').end();
   }
 
-  const user = Object.assign({ user_metadata: {} }, req.body);
-  user.user_metadata.role = req.body.role;
-  user.user_metadata.organization = req.body.organization;
+  const userProfile = {
+    role        : req.body.role,
+    organization:req.body.organization
+  };
 
-  delete user.role;
-  delete user.organization;
+  delete req.body.role;
+  delete req.body.organization;
 
   req.auth0.management.users
-    .create(user)
+    .create(req.body)
     .then(user => {
       req.logger.verbose('Created user with id %s', user.userId);
-      return res.status(201).send(user);
+
+      userProfile.auth0 = user.userId;
+
+      req.logger.info('Creating user profile', userProfile);
+      req.model('UserProfile').create(userProfile, (err, userProfile) => {
+        if (err) { return next(err); }
+
+        user.profile = userProfile;
+
+        req.logger.info('Sending user and user profile to client');
+        return res.status(201).send(user);
+      });
     })
     .catch(err => res.status(err.statusCode).send(err));
 }
@@ -67,21 +79,32 @@ function updateUserById(req, res, next) {
   const id = req.params.id;
   req.logger.info('Updating user with id %s', id);
 
-  const user = Object.assign({ user_metadata: {} }, req.body);
+  const userProfile = {
+    role        : req.body.role,
+    organization:req.body.organization
+  };
 
-  if (req.body.role) {
-    user.user_metadata.role = req.body.role;
-    delete user.role;
-  }
-
-  user.user_metadata.organization = req.body.organization;
-  delete user.organization;
+  delete req.body.role;
+  delete req.body.organization;
 
   req.auth0.management.users
-    .update({ id }, user)
+    .update({ id }, req.body)
     .then(user => {
       req.logger.verbose('Updated user with id %s', id);
-      return res.status(204).send(user);
+
+      req.model('UserProfile').update({
+        auht0: req.params.id
+      }, userProfile, (err, results) => {
+        if (err) { return next(err); }
+
+        if (results.n < 1) {
+          req.logger.verbose('UserProfile not found');
+          return res.status(404).end();
+        }
+
+        req.logger.verbose('User and User profile updated');
+        res.status(204).end();
+      });
     })
     .catch(err => res.status(err.statusCode).send(err));
 }
