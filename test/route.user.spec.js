@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-/* global describe it before after */
+/* global describe it before after beforeEach */
 
 // TODO: refactor mocks and add test cases for wrong paths
 
@@ -14,6 +14,8 @@ const newUser1Fixture    = require('./fixture/user/new-user-1.js');
 const user1Fixture       = require('./fixture/user/user-1.js');
 const updateUser1Fixture = require('./fixture/user/update-user-1.js');
 
+const userProfile1Fixture = require('./fixture/user-profile/user-profile-1.js');
+
 const api        = require('../');
 const connection = api.database.mongoose.connection;
 const users      = api.server.expressApp.request.auth0.management.users;
@@ -23,6 +25,7 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 describe('User Routes', () => {
 
   before(cb => api.start(cb));
+  beforeEach((cb) => connection.db.collection('userprofiles').remove({}, cb));
   after(cb => api.stop(cb));
 
 
@@ -97,13 +100,17 @@ describe('User Routes', () => {
     it('updates a user from Auth0 by id and responds with a 204 status code', cb => {
       sinon.stub(users, 'update', () => Promise.resolve(user1Fixture));
 
-      request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
+      connection.db.collection('userprofiles').insertOne(userProfile1Fixture, err => {
         if (err) { return cb(err); }
 
-        assert.equal(clientRes.statusCode, 204);
+        request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
+          if (err) { return cb(err); }
 
-        users.update.restore();
-        cb(null);
+          assert.equal(clientRes.statusCode, 204);
+
+          users.update.restore();
+          cb(null);
+        });
       });
     });
 

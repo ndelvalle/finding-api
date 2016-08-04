@@ -93,7 +93,7 @@ function updateUserById(req, res, next) {
       req.logger.verbose('Updated user with id %s', id);
 
       req.model('UserProfile').update({
-        auht0: req.params.id
+        auth0: req.params.id
       }, userProfile, (err, results) => {
         if (err) { return next(err); }
 
