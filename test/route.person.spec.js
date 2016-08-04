@@ -83,7 +83,7 @@ describe('Person Routes', () => {
     });
   });
 
-  describe('Query People Route - GET /', () => {
+  describe.skip('Query People Route - GET /', () => {
     beforeEach((cb) => connection.db.collection('person').insertOne(person1Fixture, cb));
 
     it('searches for people documents in the database', (cb) => {
