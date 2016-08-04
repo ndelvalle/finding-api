@@ -6,6 +6,7 @@ const router = new Router();
 
 function createPerson(req, res, next) {
   req.logger.info('Creating person', req.body);
+
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 
@@ -31,30 +32,30 @@ function createPerson(req, res, next) {
   });
 }
 
-function queryPeople(req, res, next) {
-  req.logger.info('Querying people', req.query);
+function queryPerson(req, res, next) {
+  req.logger.info('Querying persons', req.query);
   req.model('Person').countAndFind(req.query)
     .skip(req.skip)
     .limit(req.limit)
     .sort(req.sort)
     .lean()
-    .exec((err, people, peopleCount) => {
+    .exec((err, persons, personsCount) => {
       if (err) { return next(err); }
 
-      req.logger.verbose('Sending people to client');
-      res.sendQueried(people, peopleCount);
+      req.logger.verbose('Sending persons to client');
+      res.sendQueried(persons, personsCount);
     });
 }
 
-function queryPeopleByGeolocation(req, res, next) {
-  req.logger.info('Querying people by geolocation', req.query);
+function queryPersonByGeolocation(req, res, next) {
+  req.logger.info('Querying persons by geolocation', req.query);
 
   const location = { lng: req.params.longitude, lat: req.params.latitude };
-  req.model('Person').findByGeolocation(req.query, location, (err, people) => {
+  req.model('Person').findByGeolocation(req.query, location, (err, persons) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending people to client');
-    res.sendQueried(people);
+    req.logger.verbose('Sending persons to client');
+    res.sendQueried(persons);
   });
 }
 
@@ -120,8 +121,8 @@ function restorePersonById(req, res, next) {
 }
 
 router.post(  '/',                          jwt.auth, createPerson);
-router.get(   '/',                          queryPeople);
-router.get(   '/near/:longitude/:latitude', queryPeopleByGeolocation);
+router.get(   '/',                          queryPerson);
+router.get(   '/near/:longitude/:latitude', queryPersonByGeolocation);
 router.get(   '/:id([0-9a-f]{24})',         findPersonById);
 router.put(   '/:id',                       jwt.auth, updatePersonById);
 router.delete('/:id',                       jwt.auth, removePersonById);

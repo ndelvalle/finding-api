@@ -1,6 +1,7 @@
 const milieu = require('milieu');
 
 const config = milieu('api', {
+  env: 'DEV',
   server: {
     port           : process.env.PORT || 9090,
     maxResultsLimit: 1000
