@@ -103,7 +103,7 @@ describe('Person Routes', () => {
     });
   });
 
-  describe('Query People by geolocation Route - GET /', () => {
+  describe.skip('Query People by geolocation Route - GET /', () => {
     beforeEach((cb) => connection.db.collection('person').insertOne(person1Fixture, cb));
 
     it('searches for people documents by geolocation in the database', (cb) => {
