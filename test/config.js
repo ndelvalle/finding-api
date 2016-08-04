@@ -1,5 +1,7 @@
 const config = require('../config');
 
+config.env = 'UT';
+
 config.server.port = 8050;
 
 config.mongo.url  = 'mongodb://localhost/api-test';

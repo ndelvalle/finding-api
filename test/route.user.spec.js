@@ -32,7 +32,6 @@ describe('User Routes', () => {
 
       request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
-
         const user = clientRes.body;
 
         assert.equal(clientRes.statusCode, 201);

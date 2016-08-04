@@ -6,6 +6,7 @@ const router = new Router();
 
 function createPerson(req, res, next) {
   req.logger.info('Creating person', req.body);
+
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 

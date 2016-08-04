@@ -1,7 +1,8 @@
 const newUser1 = {
   connection: 'Username-Password-Authentication',
-  email: 'test@keepe.rs',
-  password: 'secret'
+  role      : 'admin',
+  email     : 'test@keepe.rs',
+  password  : 'secret'
 };
 
 
