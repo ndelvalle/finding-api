@@ -3,6 +3,7 @@ const router = new Router();
 
 
 // TODO: validate if role and/or organization exist and check if will be save id or name
+// TODO: avoid lose data in update operation
 
 function createUser(req, res, next) {
   req.logger.info('Creating user', req.body);
@@ -83,7 +84,6 @@ function updateUserById(req, res, next) {
       return res.status(204).send(user);
     })
     .catch(err => res.status(err.statusCode).send(err));
-
 }
 
 function removeUserById(req, res, next) {
