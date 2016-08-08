@@ -5,27 +5,32 @@ const router = new Router();
 
 
 function createPerson(req, res, next) {
+  const sendReponse = (req, res, person) => {
+    req.logger.verbose('Sending person to client');
+    res.sendCreated(person);
+  };
+
   req.logger.info('Creating person', req.body);
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 
+    if (!req.body.photos) { return sendReponse(req, res, person); }
+
     req.logger.verbose('Uploading person photos');
     async.map(req.body.photos, (item, cb) => {
-      req.upload(item.data, person._id, item.order, cb);
-    }, (err, urls) => {
+      req.aws.upload(item.data, person._id, item.order, cb);
+    }, (err, uploadedFiles) => {
       if (err) { return next(err); }
 
-      person.photos = urls.map(x => {
-        const mapped = { url: x.url, order: x.name };
+      person.photos = uploadedFiles.map((x, index) => {
+        const mapped = { url: x.url, name: x.name, order: index };
         return mapped;
       });
 
       req.logger.verbose('Saving uploaded photos to person model');
       person.save((err, person) => {
         if (err) { return next(err); }
-
-        req.logger.verbose('Sending person to client');
-        res.sendCreated(person);
+        sendReponse(req, res, person);
       });
     });
   });
@@ -50,7 +55,7 @@ function queryPeopleByGeolocation(req, res, next) {
   req.logger.info('Querying people by geolocation', req.query);
 
   const location = { lng: req.params.longitude, lat: req.params.latitude };
-  req.model('Person').findByGeolocation(req.query, location, (err, people) => {
+  req.model('Person').findNear(req.query, location, (err, people) => {
     if (err) { return next(err); }
 
     req.logger.verbose('Sending people to client');
@@ -88,18 +93,21 @@ function updatePersonById(req, res, next) {
 }
 
 function removePersonById(req, res, next) {
-  req.logger.info('Removing person with id %s', req.params.id);
-  req.model('Person').remove({
-    _id: req.params.id
-  }, (err, results) => {
+  req.model('Person').findById(req.params.id, (err, person) => {
     if (err) { return next(err); }
 
-    if (results.nModified < 1) {
+    if (!person) {
       req.logger.verbose('Person not found');
       return res.status(404).end();
     }
-    req.logger.verbose('Person removed');
-    res.status(204).end();
+
+    person.remove((err, person) => {
+      if (err) { return next(err); }
+
+      req.aws.remove(req.params.id, person.photos);
+      req.logger.verbose('Person removed');
+      res.status(204).end();
+    });
   });
 }
 
