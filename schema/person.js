@@ -18,13 +18,13 @@ const missingSchema = new Schema({
   lastSeenAt : { type: Date },
   isBrowsable: { type: Boolean, default: true, select: false },
   isMissing  : { type: Boolean, default: true },
-  photos     : [{ url: String, order: Number }],
+  photos     : [{ url: String, name: String, order: Number }],
   description: { clothing: String, appearance: String },
   contacts   : [{ name: String, phone: String, email: String }],
   geo
 });
 
-missingSchema.static('findByGeolocation', function(query, location, cb) {
+missingSchema.static('findNear', function(query, location, cb) {
 
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
