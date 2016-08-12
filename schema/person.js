@@ -1,26 +1,29 @@
-const Schema      = require('mongoose').Schema;
-const earthRadius = 6378.1;
+const Schema   = require('mongoose').Schema;
+const ObjectId = Schema.Types.ObjectId;
+
+const EARTH_RADIUS = 6378.1;
 
 const geo = {
   // [<longitude>, <latitude>]
   loc        : { type: [Number], index: '2dsphere', required: true },
   address    : { type: String, required: true },
   city       : { type: String, required: true },
-  postalCode : { type: String },
   countryCode: { type: String, required: true },
-  country    : { type: String, required: true }
+  country    : { type: String, required: true },
+  postalCode : { type: String }
 };
 
 const missingSchema = new Schema({
-  name       : { type: String, required: true },
-  age        : { type: Number, required: true, min: 0, max: 120 },
-  gender     : { type: String, enum: 'M F'.split(' '), required: true },
-  lastSeenAt : { type: Date },
-  isBrowsable: { type: Boolean, default: true, select: false },
-  isMissing  : { type: Boolean, default: true },
-  photos     : [{ url: String, order: Number }],
-  description: { clothing: String, appearance: String },
-  contacts   : [{ name: String, phone: String, email: String }],
+  name        : { type: String,   required: true },
+  organization: { type: ObjectId, required: true,  ref: 'Organization', sparse: true },
+  age         : { type: Number,   required: true, min: 0, max: 120 },
+  gender      : { type: String,   required: true, enum: 'M F'.split(' ') },
+  isBrowsable : { type: Boolean, default: true, select: false },
+  isMissing   : { type: Boolean, default: true },
+  description : { clothing: String, appearance: String },
+  contacts    : [{ name: String, phone: String, email: String }],
+  photos      : [{ url: String, order: Number }],
+  lastSeenAt  : { type: Date },
   geo
 });
 
@@ -37,8 +40,8 @@ missingSchema.static('findByGeolocation', function(query, location, cb) {
       near              : [longitude, latitude],
       spherical         : true,
       distanceField     : 'distance',
-      distanceMultiplier: earthRadius,
-      maxDistance       : (radius || 5000) / earthRadius,
+      distanceMultiplier: EARTH_RADIUS,
+      maxDistance       : (radius || 5000) / EARTH_RADIUS,
       query
     }
   }];
