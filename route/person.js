@@ -1,6 +1,8 @@
 const Router = require('express').Router;
-const jwt    = require('../lib/jwt');
 const async  = require('async');
+
+const jwt = require('../lib/jwt');
+
 const router = new Router();
 
 
@@ -131,7 +133,7 @@ router.get(   '/',                          queryPerson);
 router.get(   '/near/:longitude/:latitude', queryPersonByGeolocation);
 router.get(   '/:id([0-9a-f]{24})',         findPersonById);
 
-router.post(  '/',            jwt.auth, createPerson);
+router.post(  '/',            jwt.auth, jwt.session, createPerson);
 router.put(   '/:id',         jwt.auth, updatePersonById);
 router.delete('/:id',         jwt.auth, removePersonById);
 router.post(  '/restore/:id', jwt.auth, restorePersonById);
