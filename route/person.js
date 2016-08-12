@@ -7,10 +7,13 @@ const router = new Router();
 function createPerson(req, res, next) {
   req.logger.info('Creating person', req.body);
 
+  req.body.organization = req.user.organization;
+
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
 
     req.logger.verbose('Uploading person photos');
+
     async.map(req.body.photos, (item, cb) => {
       req.upload(item.data, person._id, item.order, cb);
     }, (err, urls) => {
@@ -74,8 +77,10 @@ function findPersonById(req, res, next) {
 
 function updatePersonById(req, res, next) {
   req.logger.info('Updating person with id %s', req.params.id);
+
   req.model('Person').update({
-    _id: req.params.id
+    _id        : req.params.id,
+    organizaton: req.user.organizaton
   }, req.body, (err, results) => {
     if (err) { return next(err); }
 
@@ -91,7 +96,8 @@ function updatePersonById(req, res, next) {
 function removePersonById(req, res, next) {
   req.logger.info('Removing person with id %s', req.params.id);
   req.model('Person').remove({
-    _id: req.params.id
+    _id        : req.params.id,
+    organizaton: req.user.organizaton
   }, (err, results) => {
     if (err) { return next(err); }
 
@@ -107,7 +113,8 @@ function removePersonById(req, res, next) {
 function restorePersonById(req, res, next) {
   req.logger.info('Restoring person with id %s', req.params.id);
   req.model('Person').restore({
-    _id: req.params.id
+    _id        : req.params.id,
+    organizaton: req.user.organizaton
   }, (err, results) => {
     if (err) { return next(err); }
 
@@ -120,13 +127,14 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.post(  '/',                          jwt.auth, createPerson);
 router.get(   '/',                          queryPerson);
 router.get(   '/near/:longitude/:latitude', queryPersonByGeolocation);
 router.get(   '/:id([0-9a-f]{24})',         findPersonById);
-router.put(   '/:id',                       jwt.auth, updatePersonById);
-router.delete('/:id',                       jwt.auth, removePersonById);
-router.post(  '/restore/:id',               jwt.auth, restorePersonById);
+
+router.post(  '/',            jwt.auth, createPerson);
+router.put(   '/:id',         jwt.auth, updatePersonById);
+router.delete('/:id',         jwt.auth, removePersonById);
+router.post(  '/restore/:id', jwt.auth, restorePersonById);
 
 
 module.exports = router;
