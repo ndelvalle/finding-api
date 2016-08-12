@@ -15,7 +15,7 @@ const geo = {
 
 const missingSchema = new Schema({
   name        : { type: String,   required: true },
-  organization: { type: ObjectId, required: true,  ref: 'Organization', sparse: true },
+  organization: { type: ObjectId, required: true, ref: 'Organization', sparse: true },
   age         : { type: Number,   required: true, min: 0, max: 120 },
   gender      : { type: String,   required: true, enum: 'M F'.split(' ') },
   isBrowsable : { type: Boolean, default: true, select: false },
