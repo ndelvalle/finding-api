@@ -19,9 +19,12 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('Person Routes', () => {
 
-  before((cb) => api.start(cb));
-  beforeEach((cb) => connection.db.collection('person').remove({}, cb));
-  after((cb) => api.stop(cb));
+  before(done => api.start(done));
+
+  beforeEach(() => { api.server.expressApp.request.user = {}; });
+  beforeEach(() => connection.db.collection('person').remove({}));
+
+  after(done => api.stop(done));
 
   describe('Create Person Route - POST /', () => {
     it.skip('creates a new person document in the database and responds 201 status code', (cb) => {
@@ -73,6 +76,8 @@ describe('Person Routes', () => {
     });
 
     it('responds with a 400 error if the body of the request does not align with the person schema', (cb) => {
+
+
       request.post('/person', { json: { foo: 'bar' } }, (err, clientRes) => {
         if (err) { return cb(err); }
 

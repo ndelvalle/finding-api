@@ -24,9 +24,11 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('User Routes', () => {
 
-  before(cb => api.start(cb));
-  beforeEach((cb) => connection.db.collection('userprofiles').remove({}, cb));
-  after(cb => api.stop(cb));
+  before(done => api.start(done));
+
+  beforeEach(() => connection.db.collection('userprofiles').remove({}));
+
+  after(done => api.stop(done));
 
 
   describe('Create User Route - POST /', () => {
