@@ -134,9 +134,9 @@ router.get(   '/near/:longitude/:latitude', queryPersonByGeolocation);
 router.get(   '/:id([0-9a-f]{24})',         findPersonById);
 
 router.post(  '/',            jwt.auth, jwt.session, createPerson);
-router.put(   '/:id',         jwt.auth, updatePersonById);
-router.delete('/:id',         jwt.auth, removePersonById);
-router.post(  '/restore/:id', jwt.auth, restorePersonById);
+router.put(   '/:id',         jwt.auth, jwt.session, updatePersonById);
+router.delete('/:id',         jwt.auth, jwt.session, removePersonById);
+router.post(  '/restore/:id', jwt.auth, jwt.session, restorePersonById);
 
 
 module.exports = router;
