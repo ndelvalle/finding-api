@@ -25,7 +25,7 @@ function createUser(req, res, next) {
     .then(user => {
       req.logger.verbose('Created user with id %s', user.userId);
 
-      userProfile.auth0 = user.userId;
+      userProfile.auth0 = user.user_id;
 
       req.logger.info('Creating user profile', userProfile);
       req.model('UserProfile').create(userProfile, (err, userProfile) => {
