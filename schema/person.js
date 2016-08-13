@@ -13,7 +13,7 @@ const geo = {
   postalCode : { type: String }
 };
 
-const missingSchema = new Schema({
+const personSchema = new Schema({
   name        : { type: String,   required: true },
   organization: { type: ObjectId, required: true, ref: 'Organization', sparse: true },
   age         : { type: Number,   required: true, min: 0, max: 120 },
@@ -27,7 +27,7 @@ const missingSchema = new Schema({
   geo
 });
 
-missingSchema.static('findByGeolocation', function(query, location, cb) {
+personSchema.static('findNear', function(query, location, cb) {
 
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
@@ -57,4 +57,4 @@ missingSchema.static('findByGeolocation', function(query, location, cb) {
     });
 });
 
-module.exports = missingSchema;
+module.exports = personSchema;
