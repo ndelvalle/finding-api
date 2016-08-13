@@ -64,6 +64,6 @@
     "eslint"
   ],
   "engines": {
-    "node": ">=6.3.0"
+    "node": ">=6"
   }
 }
