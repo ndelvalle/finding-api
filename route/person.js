@@ -38,28 +38,30 @@ function createPerson(req, res, next) {
 }
 
 function queryPerson(req, res, next) {
-  req.logger.info('Querying persons', req.query);
+  req.logger.info('Querying people', req.query);
+
+  if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   req.model('Person').countAndFind(req.query)
     .skip(req.skip)
     .limit(req.limit)
     .sort(req.sort)
     .lean()
-    .exec((err, persons, personsCount) => {
+    .exec((err, people, peopleCount) => {
       if (err) { return next(err); }
 
-      req.logger.verbose('Sending persons to client');
-      res.sendQueried(persons, personsCount);
+      req.logger.verbose('Sending people to client');
+      res.sendQueried(people, peopleCount);
     });
 }
 
 function queryPersonByGeolocation(req, res, next) {
-  req.logger.info('Querying persons by geolocation', req.query);
+  req.logger.info('Querying people by geolocation', req.query);
 
   const location = { lng: req.params.longitude, lat: req.params.latitude };
   req.model('Person').findNear(req.query, location, (err, people) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending persons to client');
+    req.logger.verbose('Sending people to client');
     res.sendQueried(people);
   });
 }
