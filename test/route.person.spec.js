@@ -1,15 +1,15 @@
 /* eslint-disable max-len */
 /* global describe it before beforeEach after */
 
-require('./config.js');
+require('./config');
 
 let   request        = require('request');
 const assert         = require('assert');
 const assertContains = require('assert-contains');
 
-const newPerson1Fixture    = require('./fixture/person/new-person-1.js');
-const person1Fixture       = require('./fixture/person/person-1.js');
-const updatePerson1Fixture = require('./fixture/person/update-person-1.js');
+const newPerson1Fixture    = require('./fixture/person/new-person-1');
+const person1Fixture       = require('./fixture/person/person-1');
+const updatePerson1Fixture = require('./fixture/person/update-person-1');
 
 const api        = require('../');
 const connection = api.database.mongoose.connection;

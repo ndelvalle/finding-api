@@ -1,6 +1,6 @@
 /* global describe it before after */
 
-require('./config.js');
+require('./config');
 
 let request  = require('request');
 const assert = require('assert');

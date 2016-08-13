@@ -1,7 +1,7 @@
 /* global describe it before beforeEach after */
 
-require('./config.js');
-require('./mock/jwt.js');
+require('./config');
+require('./mock/jwt');
 
 let request  = require('request');
 const assert = require('assert');
