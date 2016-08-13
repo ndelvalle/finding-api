@@ -10,17 +10,14 @@ function createPerson(req, res, next) {
     res.sendCreated(person);
   };
 
-  req.logger.info('Creating person', req.body);
-
   req.body.organization = req.user.organization;
 
+  req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
-
     if (!req.body.photos) { return sendReponse(req, res, person); }
 
     req.logger.verbose('Uploading person photos');
-
     async.map(req.body.photos, (item, cb) => {
       req.aws.upload(item.data, person._id, item.order, cb);
     }, (err, uploadedFiles) => {

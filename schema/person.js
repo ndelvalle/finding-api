@@ -2,10 +2,16 @@ const Schema   = require('mongoose').Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 const EARTH_RADIUS = 6378.1;
+const validators   = {
+  location: {
+    validator(v) { return v.length === 2; },
+    message: '{VALUE} is not a valid location!'
+  }
+};
 
 const geo = {
   // [<longitude>, <latitude>]
-  loc        : { type: [Number], index: '2dsphere', required: true },
+  loc        : { type: [Number], index: '2dsphere', required: true, validate: validators.location },
   address    : { type: String, required: true },
   city       : { type: String, required: true },
   countryCode: { type: String, required: true },
@@ -14,10 +20,10 @@ const geo = {
 };
 
 const personSchema = new Schema({
-  name        : { type: String,   required: true },
+  name        : { type: String, required: true },
   organization: { type: ObjectId, required: true, ref: 'Organization', sparse: true },
-  age         : { type: Number,   required: true, min: 0, max: 120 },
-  gender      : { type: String,   required: true, enum: 'M F'.split(' ') },
+  age         : { type: Number, required: true, min: 0, max: 120 },
+  gender      : { type: String, required: true, enum: 'M F'.split(' ') },
   isBrowsable : { type: Boolean, default: true, select: false },
   isMissing   : { type: Boolean, default: true },
   description : { clothing: String, appearance: String },
@@ -28,11 +34,12 @@ const personSchema = new Schema({
 });
 
 personSchema.static('findNear', function(query, location, cb) {
-
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
+  // Because of soft remove mongoose plugin
+  query.removedAt = undefined;
   delete query.radius;
 
   const aggregationPipelines = [{
