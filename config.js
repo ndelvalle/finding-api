@@ -1,8 +1,9 @@
 const milieu = require('milieu');
 
 const config = milieu('api', {
+  env: 'DEV',
   server: {
-    port           : process.env.PORT || 9090,
+    port           : '${PORT}',
     maxResultsLimit: 1000
   },
   mongo: {
@@ -24,9 +25,9 @@ const config = milieu('api', {
     }
   },
   auth0: {
-    clientID    : process.env.AUTH0_CLIENT_ID,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    token       : process.env.AUTH0_TOKEN,
+    clientID    : '${AUTH0_CLIENT_ID}',
+    clientSecret: '${AUTH0_CLIENT_SECRET}',
+    token       : '${AUTH0_TOKEN}',
     domain      : 'keepers-co.auth0.com',
     callbackURL : '/auth/db-callback',
     authURL     : 'https://keepers-co.auth0.com/oauth/ro',
@@ -34,10 +35,10 @@ const config = milieu('api', {
     scope       : 'openid name email'
   },
   AWS: {
-    accessKeyId    : process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region         : process.env.AWS_REGION,
-    bucket         : process.env.AWS_BUCKET
+    accessKeyId    : '${AWS_ACCESS_KEY_ID}',
+    secretAccessKey: '${AWS_SECRET_ACCESS_KEY}',
+    region         : '${AWS_REGION}',
+    bucket         : '${AWS_BUCKET}'
   }
 });
 

@@ -2,14 +2,40 @@ const Router = require('express').Router;
 const router = new Router();
 
 
+// TODO: validate if role and/or organization exist and check if will be save id or name
+// TODO: avoid lose data in update operation
+
 function createUser(req, res, next) {
   req.logger.info('Creating user', req.body);
+
+  if (!req.body.role) {
+    return res.status(400).send('Missing role parameter.').end();
+  }
+
+  const userProfile = {
+    role        : req.body.role,
+    organization:req.body.organization
+  };
+
+  delete req.body.role;
+  delete req.body.organization;
 
   req.auth0.management.users
     .create(req.body)
     .then(user => {
       req.logger.verbose('Created user with id %s', user.userId);
-      return res.status(201).send(user);
+
+      userProfile.auth0 = user.user_id;
+
+      req.logger.info('Creating user profile', userProfile);
+      req.model('UserProfile').create(userProfile, (err, userProfile) => {
+        if (err) { return next(err); }
+
+        user.profile = userProfile;
+
+        req.logger.info('Sending user and user profile to client');
+        return res.status(201).send(user);
+      });
     })
     .catch(err => res.status(err.statusCode).send(err));
 }
@@ -53,14 +79,34 @@ function updateUserById(req, res, next) {
   const id = req.params.id;
   req.logger.info('Updating user with id %s', id);
 
+  const userProfile = {
+    role        : req.body.role,
+    organization:req.body.organization
+  };
+
+  delete req.body.role;
+  delete req.body.organization;
+
   req.auth0.management.users
     .update({ id }, req.body)
     .then(user => {
       req.logger.verbose('Updated user with id %s', id);
-      return res.status(204).send(user);
+
+      req.model('UserProfile').update({
+        auth0: req.params.id
+      }, userProfile, (err, results) => {
+        if (err) { return next(err); }
+
+        if (results.n < 1) {
+          req.logger.verbose('UserProfile not found');
+          return res.status(404).end();
+        }
+
+        req.logger.verbose('User and User profile updated');
+        res.status(204).end();
+      });
     })
     .catch(err => res.status(err.statusCode).send(err));
-
 }
 
 function removeUserById(req, res, next) {

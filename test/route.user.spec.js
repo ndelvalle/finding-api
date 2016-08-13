@@ -1,18 +1,19 @@
 /* eslint-disable max-len */
-/* global describe it before after */
+/* global describe it before after beforeEach */
 
 // TODO: refactor mocks and add test cases for wrong paths
 
-require('./config.js');
-require('./mock/jwt.js');
+require('./config');
+require('./mock/jwt');
 
-let   request        = require('request');
-const assert         = require('assert');
-const sinon          = require('sinon');
+let request  = require('request');
+const assert = require('assert');
+const sinon  = require('sinon');
 
-const newUser1Fixture    = require('./fixture/user/new-user-1.js');
-const user1Fixture       = require('./fixture/user/user-1.js');
-const updateUser1Fixture = require('./fixture/user/update-user-1.js');
+const newUser1Fixture     = require('./fixture/user/new-user-1');
+const user1Fixture        = require('./fixture/user/user-1');
+const updateUser1Fixture  = require('./fixture/user/update-user-1');
+const userProfile1Fixture = require('./fixture/user-profile/user-profile-1');
 
 const api        = require('../');
 const connection = api.database.mongoose.connection;
@@ -22,8 +23,9 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('User Routes', () => {
 
-  before(cb => api.start(cb));
-  after(cb => api.stop(cb));
+  before(done => api.start(done));
+  beforeEach(() => connection.db.collection('userprofiles').remove({}));
+  after(done => api.stop(done));
 
 
   describe('Create User Route - POST /', () => {
@@ -32,7 +34,6 @@ describe('User Routes', () => {
 
       request.post('/user', { json: newUser1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
-
         const user = clientRes.body;
 
         assert.equal(clientRes.statusCode, 201);
@@ -98,13 +99,17 @@ describe('User Routes', () => {
     it('updates a user from Auth0 by id and responds with a 204 status code', cb => {
       sinon.stub(users, 'update', () => Promise.resolve(user1Fixture));
 
-      request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
+      connection.db.collection('userprofiles').insertOne(userProfile1Fixture, err => {
         if (err) { return cb(err); }
 
-        assert.equal(clientRes.statusCode, 204);
+        request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
+          if (err) { return cb(err); }
 
-        users.update.restore();
-        cb(null);
+          assert.equal(clientRes.statusCode, 204);
+
+          users.update.restore();
+          cb(null);
+        });
       });
     });
 

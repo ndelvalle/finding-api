@@ -12,7 +12,7 @@ const mongooseCountAndFind = require('mongoose-count-and-find');
 const Types = Mongoose.prototype.Schema.Types;
 Types.ClockDate = Types.Date;
 
-const logger = require('./mock/logger.js');
+const logger   = require('./mock/logger');
 const Database = require('../lib/database');
 
 

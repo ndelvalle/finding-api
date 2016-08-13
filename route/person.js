@@ -1,7 +1,7 @@
-const Router = require('express').Router;
-const jwt    = require('../lib/jwt');
 const async  = require('async');
+const Router = require('express').Router;
 const router = new Router();
+const jwt    = require('../lib/jwt');
 
 
 function createPerson(req, res, next) {
@@ -10,10 +10,11 @@ function createPerson(req, res, next) {
     res.sendCreated(person);
   };
 
-  req.logger.info('Creating person', req.body);
+  req.body.organization = req.user.organization;
+
+  req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
-
     if (!req.body.photos) { return sendReponse(req, res, person); }
 
     req.logger.verbose('Uploading person photos');
@@ -36,29 +37,29 @@ function createPerson(req, res, next) {
   });
 }
 
-function queryPeople(req, res, next) {
-  req.logger.info('Querying people', req.query);
+function queryPerson(req, res, next) {
+  req.logger.info('Querying persons', req.query);
   req.model('Person').countAndFind(req.query)
     .skip(req.skip)
     .limit(req.limit)
     .sort(req.sort)
     .lean()
-    .exec((err, people, peopleCount) => {
+    .exec((err, persons, personsCount) => {
       if (err) { return next(err); }
 
-      req.logger.verbose('Sending people to client');
-      res.sendQueried(people, peopleCount);
+      req.logger.verbose('Sending persons to client');
+      res.sendQueried(persons, personsCount);
     });
 }
 
-function queryPeopleByGeolocation(req, res, next) {
-  req.logger.info('Querying people by geolocation', req.query);
+function queryPersonByGeolocation(req, res, next) {
+  req.logger.info('Querying persons by geolocation', req.query);
 
   const location = { lng: req.params.longitude, lat: req.params.latitude };
   req.model('Person').findNear(req.query, location, (err, people) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending people to client');
+    req.logger.verbose('Sending persons to client');
     res.sendQueried(people);
   });
 }
@@ -78,8 +79,10 @@ function findPersonById(req, res, next) {
 
 function updatePersonById(req, res, next) {
   req.logger.info('Updating person with id %s', req.params.id);
+
   req.model('Person').update({
-    _id: req.params.id
+    _id        : req.params.id,
+    organizaton: req.user.organizaton
   }, req.body, (err, results) => {
     if (err) { return next(err); }
 
@@ -114,7 +117,8 @@ function removePersonById(req, res, next) {
 function restorePersonById(req, res, next) {
   req.logger.info('Restoring person with id %s', req.params.id);
   req.model('Person').restore({
-    _id: req.params.id
+    _id        : req.params.id,
+    organizaton: req.user.organizaton
   }, (err, results) => {
     if (err) { return next(err); }
 
@@ -127,13 +131,14 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.post(  '/',                          jwt.auth, createPerson);
-router.get(   '/',                          queryPeople);
-router.get(   '/near/:longitude/:latitude', queryPeopleByGeolocation);
+router.get(   '/',                          queryPerson);
+router.get(   '/near/:longitude/:latitude', queryPersonByGeolocation);
 router.get(   '/:id([0-9a-f]{24})',         findPersonById);
-router.put(   '/:id',                       jwt.auth, updatePersonById);
-router.delete('/:id',                       jwt.auth, removePersonById);
-router.post(  '/restore/:id',               jwt.auth, restorePersonById);
+
+router.post(  '/',            jwt.auth, jwt.session, createPerson);
+router.put(   '/:id',         jwt.auth, jwt.session, updatePersonById);
+router.delete('/:id',         jwt.auth, jwt.session, removePersonById);
+router.post(  '/restore/:id', jwt.auth, jwt.session, restorePersonById);
 
 
 module.exports = router;

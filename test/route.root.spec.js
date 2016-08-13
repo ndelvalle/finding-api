@@ -1,6 +1,6 @@
 /* global describe it before after */
 
-require('./config.js');
+require('./config');
 
 let request  = require('request');
 const assert = require('assert');
@@ -13,8 +13,8 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
 describe('Root Routes', () => {
 
-  before((cb) => api.start(cb));
-  after( (cb) => api.stop(cb));
+  before(done => api.start(done));
+  after( done => api.stop(done));
 
   it('responds to a root request with a 200 status code', (cb) => {
     request.get('/', (err, clientRes) => {

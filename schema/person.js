@@ -1,35 +1,45 @@
-const Schema      = require('mongoose').Schema;
-const earthRadius = 6378.1;
+const Schema   = require('mongoose').Schema;
+const ObjectId = Schema.Types.ObjectId;
+
+const EARTH_RADIUS = 6378.1;
+const validators   = {
+  location: {
+    validator(v) { return v.length === 2; },
+    message: '{VALUE} is not a valid location!'
+  }
+};
 
 const geo = {
   // [<longitude>, <latitude>]
-  loc        : { type: [Number], index: '2dsphere', required: true },
+  loc        : { type: [Number], index: '2dsphere', required: true, validate: validators.location },
   address    : { type: String, required: true },
   city       : { type: String, required: true },
-  postalCode : { type: String },
   countryCode: { type: String, required: true },
-  country    : { type: String, required: true }
+  country    : { type: String, required: true },
+  postalCode : { type: String }
 };
 
-const missingSchema = new Schema({
-  name       : { type: String, required: true },
-  age        : { type: Number, required: true, min: 0, max: 120 },
-  gender     : { type: String, enum: 'M F'.split(' '), required: true },
-  lastSeenAt : { type: Date },
-  isBrowsable: { type: Boolean, default: true, select: false },
-  isMissing  : { type: Boolean, default: true },
-  photos     : [{ url: String, name: String, order: Number }],
-  description: { clothing: String, appearance: String },
-  contacts   : [{ name: String, phone: String, email: String }],
+const personSchema = new Schema({
+  name        : { type: String, required: true },
+  organization: { type: ObjectId, required: true, ref: 'Organization', sparse: true },
+  age         : { type: Number, required: true, min: 0, max: 120 },
+  gender      : { type: String, required: true, enum: 'M F'.split(' ') },
+  isBrowsable : { type: Boolean, default: true, select: false },
+  isMissing   : { type: Boolean, default: true },
+  description : { clothing: String, appearance: String },
+  contacts    : [{ name: String, phone: String, email: String }],
+  photos      : [{ url: String, order: Number }],
+  lastSeenAt  : { type: Date },
   geo
 });
 
-missingSchema.static('findNear', function(query, location, cb) {
-
+personSchema.static('findNear', function(query, location, cb) {
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
+  // Because of soft remove mongoose plugin
+  query.removedAt = undefined;
   delete query.radius;
 
   const aggregationPipelines = [{
@@ -37,8 +47,8 @@ missingSchema.static('findNear', function(query, location, cb) {
       near              : [longitude, latitude],
       spherical         : true,
       distanceField     : 'distance',
-      distanceMultiplier: earthRadius,
-      maxDistance       : (radius || 5000) / earthRadius,
+      distanceMultiplier: EARTH_RADIUS,
+      maxDistance       : (radius || 5000) / EARTH_RADIUS,
       query
     }
   }];
@@ -54,4 +64,4 @@ missingSchema.static('findNear', function(query, location, cb) {
     });
 });
 
-module.exports = missingSchema;
+module.exports = personSchema;
