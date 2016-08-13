@@ -3,18 +3,17 @@
 
 // TODO: refactor mocks and add test cases for wrong paths
 
-require('./config.js');
-require('./mock/jwt.js');
+require('./config');
+require('./mock/jwt');
 
-let   request        = require('request');
-const assert         = require('assert');
-const sinon          = require('sinon');
+let request  = require('request');
+const assert = require('assert');
+const sinon  = require('sinon');
 
-const newUser1Fixture    = require('./fixture/user/new-user-1.js');
-const user1Fixture       = require('./fixture/user/user-1.js');
-const updateUser1Fixture = require('./fixture/user/update-user-1.js');
-
-const userProfile1Fixture = require('./fixture/user-profile/user-profile-1.js');
+const newUser1Fixture     = require('./fixture/user/new-user-1');
+const user1Fixture        = require('./fixture/user/user-1');
+const updateUser1Fixture  = require('./fixture/user/update-user-1');
+const userProfile1Fixture = require('./fixture/user-profile/user-profile-1');
 
 const api        = require('../');
 const connection = api.database.mongoose.connection;
@@ -25,9 +24,7 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 describe('User Routes', () => {
 
   before(done => api.start(done));
-
   beforeEach(() => connection.db.collection('userprofiles').remove({}));
-
   after(done => api.stop(done));
 
 
