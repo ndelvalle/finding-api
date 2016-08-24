@@ -17,7 +17,7 @@ function getStatsByGender(req, res, next) {
       total : { $sum: 1 }
     }
   }, {
-    $match : { removeAt : undefined }
+    $match : { removeAt: undefined }
   }])
     .exec((err, genderStats) => {
       if (err) { return next(err); }
@@ -36,7 +36,7 @@ function getStatsByAge(req, res, next) {
       total: { $sum: 1 }
     }
   }, {
-    $match : { removeAt : undefined }
+    $match : { removeAt: undefined }
   }])
     .exec((err, ageStats) => {
       if (err) { return next(err); }
@@ -47,8 +47,47 @@ function getStatsByAge(req, res, next) {
     });
 }
 
-router.get('/person/gender', getStatsByGender);
-router.get('/person/age',    getStatsByAge);
+function getPersonTotalCount(req, res, next) {
+  req.logger.verbose('Responding to person count request');
+  req.model('Person').count({ removeAt: undefined }, (err, count) => {
+    if (err) { return next(err); }
+
+    req.logger.verbose('Sending person count to client');
+    res.sendFound(count);
+  });
+}
+
+function getPersonChildrenCount(req, res, next) {
+  req.logger.verbose('Responding to person children count request');
+  req.model('Person').count({
+    removeAt: undefined,
+    age: { $lt: 18 }
+  }, (err, count) => {
+    if (err) { return next(err); }
+
+    req.logger.verbose('Sending person children count to client');
+    res.sendFound(count);
+  });
+}
+
+function getPersonFoundCount(req, res, next) {
+  req.logger.verbose('Responding to person found count request');
+  req.model('Person').count({
+    removeAt : undefined,
+    isMissing: false
+  }, (err, count) => {
+    if (err) { return next(err); }
+
+    req.logger.verbose('Sending person found count to client');
+    res.sendFound(count);
+  });
+}
+
+router.get('/person/gender',         getStatsByGender);
+router.get('/person/age',            getStatsByAge);
+router.get('/person/count/total',    getPersonTotalCount);
+router.get('/person/count/children', getPersonChildrenCount);
+router.get('/person/count/found',    getPersonFoundCount);
 
 
 module.exports = router;
