@@ -10,7 +10,6 @@ const validators   = {
 };
 
 const geo = {
-  // [<longitude>, <latitude>]
   loc        : { type: [Number], index: '2dsphere', required: true, validate: validators.location },
   address    : { type: String, required: true },
   city       : { type: String, required: true },
