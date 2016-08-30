@@ -58,7 +58,10 @@ function queryPersonByGeolocation(req, res, next) {
   req.logger.info('Querying people by geolocation', req.query);
 
   const location = { lng: req.params.longitude, lat: req.params.latitude };
-  req.model('Person').findNear(req.query, location, (err, people) => {
+  req.model('Person').findNear(req.query, {
+    skip : req.skip,
+    limit: req.limit
+  }, location, (err, people) => {
     if (err) { return next(err); }
 
     req.logger.verbose('Sending people to client');

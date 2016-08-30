@@ -32,21 +32,12 @@ const personSchema = new Schema({
   geo
 });
 
-personSchema.static('findNear', function(query, location, cb) {
+personSchema.static('findNear', function(query, pagination, location, cb) {
   const aggregationPipelines = [];
+
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
-
-  if (query.$skip) {
-    aggregationPipelines.push({ $skip: query.$skip });
-    delete query.$skip;
-  }
-
-  if (query.$limit) {
-    aggregationPipelines.push({ $limit: query.$limit });
-    delete query.$limit;
-  }
 
   // Because of soft remove mongoose plugin
   query.removedAt = undefined;
@@ -62,6 +53,9 @@ personSchema.static('findNear', function(query, location, cb) {
       query
     }
   });
+
+  if (pagination.skip) { aggregationPipelines.push({ $skip: pagination.skip }); }
+  if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
 
   this.aggregate(aggregationPipelines)
     .exec((err, people) => {
