@@ -32,7 +32,9 @@ const personSchema = new Schema({
   geo
 });
 
-personSchema.static('findNear', function(query, location, cb) {
+personSchema.static('findNear', function(query, pagination, location, cb) {
+  const aggregationPipelines = [];
+
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
@@ -41,7 +43,7 @@ personSchema.static('findNear', function(query, location, cb) {
   query.removedAt = undefined;
   delete query.radius;
 
-  const aggregationPipelines = [{
+  aggregationPipelines.push({
     $geoNear: {
       near              : [longitude, latitude],
       spherical         : true,
@@ -50,10 +52,10 @@ personSchema.static('findNear', function(query, location, cb) {
       maxDistance       : (radius || 5000) / EARTH_RADIUS,
       query
     }
-  }];
+  });
 
-  if (query.skip) { aggregationPipelines.push({ $skip: query.skip }); }
-  if (query.limit) { aggregationPipelines.push({ $limit: query.limit }); }
+  if (pagination.skip) { aggregationPipelines.push({ $skip: pagination.skip }); }
+  if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
 
   this.aggregate(aggregationPipelines)
     .exec((err, people) => {
