@@ -12,6 +12,7 @@
     "start": "./bin/api",
     "dev": "nodemon -r dotenv/config ./bin/api",
     "test": "mocha --bail test/*.spec.js",
+    "nomad": "nomad up",
     "debug-start": "node-debug ./bin/api",
     "debug-test": "node-debug _mocha test/*.spec.js",
     "cover": "istanbul cover _mocha test/*.spec.js",
