@@ -9,7 +9,7 @@ exports.isIgnored    = false;
 
 exports.up = function(db, done) {
   db.collection('users').insertOne({
-    _id          : new ObjectId('57ad49a3cc8672aa14006c19'),
+    _id          : new ObjectId('57ad49a3cc8672aa14006c01'),
     role         : new ObjectId('57a2cada0e8c0d408651e6ff'),
     organization : new ObjectId('57ad47e540ae419411780bbf'),
     auth0        : 'auth0|57967f714774d1bd39da54e5',
