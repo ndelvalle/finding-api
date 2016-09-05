@@ -15,7 +15,7 @@ function createPerson(req, res, next) {
   req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
-    if (!req.body.photos) { return sendReponse(req, res, person); }
+    if (!req.body.photos || req.body.photos.length) { return sendReponse(req, res, person); }
 
     req.logger.verbose('Uploading person photos');
     async.map(req.body.photos, (item, cb) => {
