@@ -1,5 +1,5 @@
 
-const newPerson1 = {
+const newPersonRequest1 = {
   name       : 'Foo Bar',
   age        : 24,
   gender     : 'M',
@@ -10,4 +10,4 @@ const newPerson1 = {
 };
 
 
-module.exports = newPerson1;
+module.exports = newPersonRequest1;
