@@ -1,4 +1,4 @@
-const person1 = {
+const personRequest1 = {
   name       : 'Foo Bar',
   age        : 24,
   gender     : 'M',
@@ -9,4 +9,4 @@ const person1 = {
 };
 
 
-module.exports = person1;
+module.exports = personRequest1;
