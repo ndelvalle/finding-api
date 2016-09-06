@@ -20,7 +20,7 @@ describe('User Profile Routes', () => {
   beforeEach(() => connection.db.collection('userprofiles').remove({}));
   after(done => api.stop(done));
 
-  describe.only('Get UserProfile Route - GET /:id', () => {
+  describe('Get UserProfile Route - GET /:id', () => {
     beforeEach(done => connection.db.collection('userprofiles').insertOne(userProfileFixture1, done));
 
     it('returns an user profile document in the database and responds with 200 status code', (cb) => {
