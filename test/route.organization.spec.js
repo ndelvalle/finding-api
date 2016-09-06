@@ -142,10 +142,10 @@ describe('Organization Routes', () => {
     });
   });
 
-('Remove Organization Route - DELETE /:id', () => {
-    beforeEach( (cb) => connection.db.collection('organizations').insertOne(organization1Fixture, cb));
+  describe('Remove Organization Route - DELETE /:id', () => {
+    beforeEach(done => connection.db.collection('organizations').insertOne(organization1Fixture, done));
 
-    it('removes a organization document from the database', (cb) => {
+    it('removes a organization document from the database and responds with 204 status code', (cb) => {
       request.delete(`organization/${organization1Fixture._id.toString()}`, (err, clientRes) => {
         if (err) { return cb(err); }
 
@@ -159,17 +159,37 @@ describe('Organization Routes', () => {
         });
       });
     });
+
+    it('responds with a 404 error if an organization does not exist with the given id', (cb) => {
+      request.delete('organization/5d9e362ece1cf00fa05efb96', { json: updateOrganization1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 404);
+        cb(null);
+      });
+    });
+
+    it('responds with a 400 if the given id is not a valid ObjectId', (cb) => {
+      request.delete('organization/0', { json: updateOrganization1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 400);
+
+        cb(null);
+      });
+    });
+
   });
 
   describe('Restore Organization Route - POST /restore/:id', () => {
-    beforeEach( (cb) => {
+    beforeEach(done => {
       connection.db.collection('organizations').insertOne(
         Object.assign({}, organization1Fixture, { removedAt: new Date() }),
-        cb
+        done
       );
     });
 
-    it.skip('restores a organization document in the database', (cb) => {
+    it('restores a organization document in the database and responds with 204 status code', (cb) => {
       request.post(`organization/restore/${organization1Fixture._id.toString()}`, (err, clientRes) => {
         if (err) { return cb(err); }
 
