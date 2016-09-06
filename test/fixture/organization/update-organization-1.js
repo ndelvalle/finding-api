@@ -1,5 +1,5 @@
 const updateOrganization1 = {
-  description: 'Something...'
+  $set: { description: 'Something...' }
 };
 
 module.exports = updateOrganization1;

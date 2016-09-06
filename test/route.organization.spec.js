@@ -55,6 +55,7 @@ describe('Organization Routes', () => {
 
         assert.equal(clientRes.statusCode, 400);
         assert.ok(clientRes.body.match(/ValidationError/));
+
         cb(null);
       });
     });
@@ -90,7 +91,7 @@ describe('Organization Routes', () => {
       });
     });
 
-    it('responds with 404 error when organization does not exist', (cb) => {
+    it('responds with a 404 error if an organization does not exist with the given id', (cb) => {
       request.get(`organization/${organization2Fixture._id.toString()}`, { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
@@ -102,41 +103,46 @@ describe('Organization Routes', () => {
   });
 
   describe('Update Organization by Id Route - PUT /:id', () => {
-    it.skip('updates a document by id and responds with a 204', (cb) => {
-      connection.db.collection('organizations').insertOne(organization1Fixture, (err) => {
+    beforeEach(done => connection.db.collection('organizations').insertOne(organization1Fixture, done));
+
+    it('updates an organization document and responds with a 204 status code', (cb) => {
+      request.put(`organization/${organization1Fixture._id.toString()}`,
+      { json: updateOrganization1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        request.put(`organization/${organization1Fixture._id.toString()}`, { json: updateOrganization1Fixture }, (err, clientRes) => {
+        assert.equal(clientRes.statusCode, 204);
+
+        connection.db.collection('organizations').findOne({ _id: organization1Fixture._id }, (err, organization) => {
           if (err) { return cb(err); }
 
-          assert.equal(clientRes.statusCode, 204);
+          assertContains(organization, { description: 'Something...' });
 
-          connection.db.collection('organizations').findOne({ _id: organization1Fixture._id }, (err, organization) => {
-            if (err) { return cb(err); }
-
-            assertContains(organization, updateOrganization1Fixture);
-
-            cb(null);
-          });
-        });
-      });
-    });
-
-    it('responds with a 404 error if a document does not exist with the given id', (cb) => {
-      connection.db.collection('organizations').insertOne(organization1Fixture, (err) => {
-        if (err) { return cb(err); }
-
-        request.put('organization/5d9e362ece1cf00fa05efb96', { json: updateOrganization1Fixture }, (err, clientRes) => {
-          if (err) { return cb(err); }
-
-          assert.equal(clientRes.statusCode, 404);
           cb(null);
         });
       });
     });
+
+    it('responds with a 404 error if an organization does not exist with the given id', (cb) => {
+      request.put('organization/5d9e362ece1cf00fa05efb96', { json: updateOrganization1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 404);
+        cb(null);
+      });
+    });
+
+    it('responds with a 400 if the given id is not a valid ObjectId', (cb) => {
+      request.put('organization/0', { json: updateOrganization1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 400);
+
+        cb(null);
+      });
+    });
   });
 
-  describe.skip('Remove Organization Route - DELETE /:id', () => {
+('Remove Organization Route - DELETE /:id', () => {
     beforeEach( (cb) => connection.db.collection('organizations').insertOne(organization1Fixture, cb));
 
     it('removes a organization document from the database', (cb) => {
