@@ -58,10 +58,10 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
 
   this.aggregate(aggregationPipelines)
-    .exec((err, people) => {
+    .exec((err, person) => {
       if (err) { return cb(err); }
 
-      cb(null, people);
+      cb(null, person);
     });
 });
 

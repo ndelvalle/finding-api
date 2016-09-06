@@ -23,8 +23,9 @@ function createPerson(req, res, next) {
     }, (err, uploadedFiles) => {
       if (err) { return next(err); }
 
-      person.photos = uploadedFiles.map((x, index) => {
-        const mapped = { url: x.url, name: x.name, order: index };
+      person.photos = uploadedFiles.map((photo, index) => {
+        photo = photo || {};
+        const mapped = { url: photo.url, name: photo.name, order: index };
         return mapped;
       });
 
@@ -38,7 +39,7 @@ function createPerson(req, res, next) {
 }
 
 function queryPerson(req, res, next) {
-  req.logger.info('Querying people', req.query);
+  req.logger.info('Querying person', req.query);
 
   if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   req.model('Person').countAndFind(req.query)
@@ -46,27 +47,27 @@ function queryPerson(req, res, next) {
     .limit(req.limit)
     .sort(req.sort)
     .lean()
-    .exec((err, people, peopleCount) => {
+    .exec((err, person, personCount) => {
       if (err) { return next(err); }
 
-      req.logger.verbose('Sending people to client');
-      res.sendQueried(people, peopleCount);
+      req.logger.verbose('Sending person to client');
+      res.sendQueried(person, personCount);
     });
 }
 
 function queryPersonByGeolocation(req, res, next) {
-  req.logger.info('Querying people by geolocation', req.query);
+  req.logger.info('Querying person by geolocation', req.query);
 
   if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   const location = { lng: req.params.longitude, lat: req.params.latitude };
   req.model('Person').findNear(req.query, {
     skip : req.skip,
     limit: req.limit
-  }, location, (err, people) => {
+  }, location, (err, person) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending people to client');
-    res.sendQueried(people);
+    req.logger.verbose('Sending person to client');
+    res.sendQueried(person);
   });
 }
 
