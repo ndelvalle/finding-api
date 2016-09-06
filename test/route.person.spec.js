@@ -27,7 +27,7 @@ describe('Person Routes', () => {
   after(done => api.stop(done));
 
   describe('Create Person Route - POST /', () => {
-    it.skip('creates a new person document in the database and responds 201 status code', (cb) => {
+    it('creates a new person document in the database and responds 201 status code', (cb) => {
       request.post('/person', { json: newPerson1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
@@ -56,7 +56,8 @@ describe('Person Routes', () => {
             return photo;
           });
 
-          person._id = person._id.toString();
+          person._id          = person._id.toString();
+          person.organization = person.organization.toString();
 
           person.contacts = person.contacts.map(contact => {
             contact._id = contact._id.toString();
@@ -195,7 +196,7 @@ describe('Person Routes', () => {
   });
 
   describe('Update Person by Id Route - PUT /:id', () => {
-    it.skip('updates a document by id and responds with a 204', (cb) => {
+    it('updates a person document by id and responds with a 204 status code', (cb) => {
       connection.db.collection('persons').insertOne(person1Fixture, (err) => {
         if (err) { return cb(err); }
 
@@ -226,7 +227,7 @@ describe('Person Routes', () => {
   });
 
   describe('Remove Person Route - DELETE /:id', () => {
-    beforeEach( (cb) => connection.db.collection('persons').insertOne(person1Fixture, cb));
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
 
     it('removes a person document from the database', (cb) => {
       request.delete(`person/${person1Fixture._id.toString()}`, (err, clientRes) => {
@@ -242,13 +243,22 @@ describe('Person Routes', () => {
         });
       });
     });
+
+    it('responds with a 404 error if a document does not exist with the given id', (cb) => {
+      request.delete('person/5d9e362ece1cf00fa05efb96', { json: updatePerson1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 404);
+        cb(null);
+      });
+    });
   });
 
   describe('Restore Person Route - POST /restore/:id', () => {
-    beforeEach( (cb) => {
+    beforeEach(done => {
       connection.db.collection('persons').insertOne(
         Object.assign({}, person1Fixture, { removedAt: new Date() }),
-        cb
+        done
       );
     });
 
@@ -265,6 +275,15 @@ describe('Person Routes', () => {
 
           cb(null);
         });
+      });
+    });
+
+    it('responds with a 404 error if a document does not exist with the given id', (cb) => {
+      request.post('person/restore/5d9e362ece1cf00fa05efb96', { json: updatePerson1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 404);
+        cb(null);
       });
     });
   });
