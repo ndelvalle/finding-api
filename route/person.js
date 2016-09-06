@@ -23,8 +23,9 @@ function createPerson(req, res, next) {
     }, (err, uploadedFiles) => {
       if (err) { return next(err); }
 
-      person.photos = uploadedFiles.map((x, index) => {
-        const mapped = { url: x.url, name: x.name, order: index };
+      person.photos = uploadedFiles.map((photo, index) => {
+        photo = photo || {};
+        const mapped = { url: photo.url, name: photo.name, order: index };
         return mapped;
       });
 
