@@ -65,7 +65,7 @@ describe('Organization Routes', () => {
     beforeEach(done => connection.db.collection('organizations')
       .insertMany([organization1Fixture, organization2Fixture], done));
 
-    it('searches for organzation documents in the database and responds with 200 status code', (cb) => {
+    it('searches for organization documents in the database and responds with 200 status code', (cb) => {
       request.get('/organization', { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
