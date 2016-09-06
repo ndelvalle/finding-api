@@ -7,8 +7,12 @@ let   request        = require('request');
 const assert         = require('assert');
 const assertContains = require('assert-contains');
 
-const organization1Fixture       = require('./fixture/organization/organization-1');
-const newOrganization1Fixture    = require('./fixture/organization/new-organization-1');
+const organization1Fixture = require('./fixture/organization/organization-1');
+const organization2Fixture = require('./fixture/organization/organization-2');
+
+const newOrganization1Fixture = require('./fixture/organization/new-organization-1');
+const newOrganization2Fixture = require('./fixture/organization/new-organization-2');
+
 const updateOrganization1Fixture = require('./fixture/organization/update-organization-1');
 
 const api        = require('../');
@@ -20,13 +24,12 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 describe('Organization Routes', () => {
 
   before(done => api.start(done));
-
   beforeEach(() => connection.db.collection('organizations').remove({}));
-
   after(done => api.stop(done));
 
   describe('Create Organization Route - POST /', () => {
-    it.only('creates a new organization document in the database and responds 201 status code', (cb) => {
+
+    it('creates a new organization document in the database and responds 201 status code', (cb) => {
       request.post('/organization', { json: newOrganization1Fixture }, (err, clientRes) => {
         if (err) { return cb(err); }
 
@@ -39,7 +42,6 @@ describe('Organization Routes', () => {
 
           const organization = organizations[0];
           organization._id = organization._id.toString();
-
           assertContains(organization, newOrganization1Fixture);
 
           cb(null);
@@ -48,9 +50,7 @@ describe('Organization Routes', () => {
     });
 
     it('responds with a 400 error if the body of the request does not align with the organization schema', (cb) => {
-
-
-      request.post('/organization', { json: { foo: 'bar' } }, (err, clientRes) => {
+      request.post('/organization', { json: {} }, (err, clientRes) => {
         if (err) { return cb(err); }
 
         assert.equal(clientRes.statusCode, 400);
@@ -60,79 +60,16 @@ describe('Organization Routes', () => {
     });
   });
 
-  describe.skip('Query People Route - GET /', () => {
-    beforeEach((cb) => connection.db.collection('organizations').insertOne(organization1Fixture, cb));
+  describe('Query Organization Route - GET /', () => {
+    beforeEach(done => connection.db.collection('organizations')
+      .insertMany([organization1Fixture, organization2Fixture], done));
 
-    it('searches for people documents in the database', (cb) => {
+    it('searches for organzation documents in the database and responds with 200 status code', (cb) => {
       request.get('/organization', { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        clientRes.body = clientRes.body.map(organization => {
-          organization.lastSeenAt  = new Date(organization.lastSeenAt);
-          organization.isBrowsable = true;
-          return organization;
-        });
-
-        assertContains(clientRes.body, [newOrganization1Fixture]);
-
-        cb(null);
-      });
-    });
-  });
-
-  describe.skip('Query People by geolocation Route - GET /', () => {
-    beforeEach((cb) => connection.db.collection('organizations').insertOne(organization1Fixture, cb));
-
-    it('searches for people documents by geolocation in the database', (cb) => {
-      const longitude = newOrganization1Fixture.geo.loc[0];
-      const latitude  = newOrganization1Fixture.geo.loc[1];
-      request.get(`/organization/near/${longitude}/${latitude}`, { json: true }, (err, clientRes) => {
-        if (err) { return cb(err); }
-
-        clientRes.body = clientRes.body.map(organization => {
-          organization.lastSeenAt  = new Date(organization.lastSeenAt);
-          organization.isBrowsable = true;
-          return organization;
-        });
-
-        assertContains(clientRes.body, [newOrganization1Fixture]);
-
-        cb(null);
-      });
-    });
-
-    it('searches for people documents by geolocation using 1km radius in the database', (cb) => {
-      const longitude = -58.371692;
-      const latitude  = -34.654220;
-
-      request.get(`/organization/near/${longitude}/${latitude}`, {
-        qs: { radius: 1 }, json: true
-      }, (err, clientRes) => {
-        if (err) { return cb(err); }
-
         assert.equal(clientRes.statusCode, 200);
-        assert.deepEqual(clientRes.body, []);
-
-        cb(null);
-      });
-    });
-
-    it('searches for people documents by geolocation using 10km radius in the database', (cb) => {
-      const longitude = -58.371692;
-      const latitude  = -34.654220;
-
-      request.get(`/organization/near/${longitude}/${latitude}`, {
-        qs: { radius: 10 }, json: true
-      }, (err, clientRes) => {
-        if (err) { return cb(err); }
-
-        clientRes.body = clientRes.body.map(organization => {
-          organization.lastSeenAt  = new Date(organization.lastSeenAt);
-          organization.isBrowsable = true;
-          return organization;
-        });
-
-        assertContains(clientRes.body, [newOrganization1Fixture]);
+        assertContains(clientRes.body, [newOrganization1Fixture, newOrganization2Fixture]);
 
         cb(null);
       });
@@ -140,16 +77,24 @@ describe('Organization Routes', () => {
   });
 
   describe('Get Organization Route - GET /:id', () => {
-    beforeEach( (cb) => connection.db.collection('organizations').insertOne(organization1Fixture, cb));
+    beforeEach(done => connection.db.collection('organizations').insertOne(organization1Fixture, done));
 
-    it.skip('retrieves a organization document in the database', (cb) => {
+    it('returns an organization document in the database and responds with 200 status code', (cb) => {
       request.get(`organization/${organization1Fixture._id.toString()}`, { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        clientRes.body.lastSeenAt  = new Date(clientRes.body.lastSeenAt);
-        clientRes.body.isBrowsable = true;
-
+        assert.equal(clientRes.statusCode, 200);
         assertContains(clientRes.body, newOrganization1Fixture);
+
+        cb(null);
+      });
+    });
+
+    it('responds with 404 error when organization does not exist', (cb) => {
+      request.get(`organization/${organization2Fixture._id.toString()}`, { json: true }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 404);
 
         cb(null);
       });
