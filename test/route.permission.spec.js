@@ -21,7 +21,7 @@ const connection = api.database.mongoose.connection;
 
 request = request.defaults({ baseUrl: 'http://localhost:8050' });
 
-describe.only('Permission Routes', () => {
+describe('Permission Routes', () => {
 
   before(done => api.start(done));
   beforeEach(() => connection.db.collection('permissions').remove({}));
