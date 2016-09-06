@@ -204,5 +204,24 @@ describe('Organization Routes', () => {
         });
       });
     });
+
+    it('responds with a 404 error if an organization does not exist with the given id', (cb) => {
+      request.post('organization/restore/5d9e362ece1cf00fa05efb96', { json: updateOrganization1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 404);
+        cb(null);
+      });
+    });
+
+    it('responds with a 400 if the given id is not a valid ObjectId', (cb) => {
+      request.post('organization/restore/0', { json: updateOrganization1Fixture }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        assert.equal(clientRes.statusCode, 400);
+
+        cb(null);
+      });
+    });
   });
 });
