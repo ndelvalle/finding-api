@@ -1,5 +1,6 @@
 const newOrganization1 = {
-  name : 'Keepers'
+  _id  : '57ad47e540ae419411780bbf',
+  name: 'Keepers'
 };
 
 
