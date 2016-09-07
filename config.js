@@ -39,6 +39,10 @@ const config = milieu('api', {
     secretAccessKey: '${AWS_SECRET_ACCESS_KEY}',
     region         : '${AWS_REGION}',
     bucket         : '${AWS_BUCKET}'
+  },
+  trace: {
+    serviceName: '${TRACE_SERVICE_NAME}',
+    apiKey: '${TRACE_API_KEY}'
   }
 });
 
