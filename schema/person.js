@@ -35,15 +35,16 @@ const personSchema = new Schema({
 personSchema.static('findNear', function(query, pagination, location, cb) {
   const aggregationPipelines = [];
 
-  const radius    = Number(query.radius);
+  const radius = Number(query.radius);
+  delete query.radius;
+
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
-  query.isMissing && (query.isMissing = Boolean(query.isMissing));
+  query.isMissing = query.isMissing === 'true';
 
   // Because of soft remove mongoose plugin
   query.removedAt = undefined;
-  delete query.radius;
 
   aggregationPipelines.push({
     $geoNear: {
