@@ -39,6 +39,8 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
+  query.isMissing && (query.isMissing = Boolean(query.isMissing));
+
   // Because of soft remove mongoose plugin
   query.removedAt = undefined;
   delete query.radius;
@@ -54,7 +56,7 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
     }
   });
 
-  if (pagination.skip) { aggregationPipelines.push({ $skip: pagination.skip }); }
+  if (pagination.skip)  { aggregationPipelines.push({ $skip : pagination.skip }); }
   if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
 
   this.aggregate(aggregationPipelines)
