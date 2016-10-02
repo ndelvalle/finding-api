@@ -5,7 +5,7 @@ const EARTH_RADIUS = 6378.1;
 const validators   = {
   location: {
     validator(v) { return v.length === 2; },
-    message: '{VALUE} is not a valid location!'
+    message: '{VALUE} is not a valid location'
   }
 };
 
@@ -25,7 +25,7 @@ const personSchema = new Schema({
   gender      : { type: String, required: true, enum: 'M F'.split(' ') },
   isBrowsable : { type: Boolean, default: true, select: false },
   isMissing   : { type: Boolean, default: true },
-  description : { clothing: String, appearance: String },
+  description : { clothing: String, appearance: String, disappearance: String },
   contacts    : [{ name: String, phone: String, email: String }],
   photos      : [{ url: String, order: Number }],
   lastSeenAt  : { type: Date },
