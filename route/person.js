@@ -1,7 +1,8 @@
 const async  = require('async');
 const Router = require('express').Router;
 const router = new Router();
-const jwt    = require('../lib/jwt');
+
+const jwt = require('../lib/jwt');
 
 
 function createPerson(req, res, next) {
@@ -10,7 +11,7 @@ function createPerson(req, res, next) {
     res.sendCreated(person);
   };
 
-  req.body.organization = req.user.organization;
+  req.body.organization = req.user.profile.organization;
 
   req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
   req.model('Person').create(req.body, (err, person) => {
@@ -89,7 +90,7 @@ function updatePersonById(req, res, next) {
 
   req.model('Person').update({
     _id        : req.params.id,
-    organizaton: req.user.organizaton
+    organizaton: req.user.profile.organizaton
   }, req.body, (err, results) => {
     if (err) { return next(err); }
 
@@ -125,7 +126,7 @@ function restorePersonById(req, res, next) {
   req.logger.info('Restoring person with id %s', req.params.id);
   req.model('Person').restore({
     _id        : req.params.id,
-    organizaton: req.user.organizaton
+    organizaton: req.user.profile.organizaton
   }, (err, results) => {
     if (err) { return next(err); }
 

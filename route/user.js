@@ -14,7 +14,7 @@ function createUser(req, res, next) {
 
   const userProfile = {
     role        : req.body.role,
-    organization:req.body.organization
+    organization: req.body.organization
   };
 
   delete req.body.role;
