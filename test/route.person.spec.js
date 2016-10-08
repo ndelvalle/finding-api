@@ -21,7 +21,7 @@ describe('Person Routes', () => {
 
   before(done => api.start(done));
 
-  beforeEach(() => { api.server.expressApp.request.user = { organization: '57ad47e540ae419411780bbf' }; });
+  beforeEach(() => { api.server.expressApp.request.user = { profile: { organization: '57ad47e540ae419411780bbf' } }; });
   beforeEach(() => connection.db.collection('persons').remove({}));
 
   after(done => api.stop(done));
