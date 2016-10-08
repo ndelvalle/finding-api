@@ -5,7 +5,7 @@ const EARTH_RADIUS = 6378.1;
 const validators   = {
   location: {
     validator(v) { return v.length === 2; },
-    message: '{VALUE} is not a valid location!'
+    message: '{VALUE} is not a valid location'
   }
 };
 
@@ -25,7 +25,7 @@ const personSchema = new Schema({
   gender      : { type: String, required: true, enum: 'M F'.split(' ') },
   isBrowsable : { type: Boolean, default: true, select: false },
   isMissing   : { type: Boolean, default: true },
-  description : { clothing: String, appearance: String },
+  description : { clothing: String, appearance: String, disappearance: String },
   contacts    : [{ name: String, phone: String, email: String }],
   photos      : [{ url: String, order: Number }],
   lastSeenAt  : { type: Date },
@@ -35,13 +35,16 @@ const personSchema = new Schema({
 personSchema.static('findNear', function(query, pagination, location, cb) {
   const aggregationPipelines = [];
 
-  const radius    = Number(query.radius);
+  const radius = Number(query.radius);
+  delete query.radius;
+
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
+  query.isMissing = query.isMissing === 'true';
+
   // Because of soft remove mongoose plugin
   query.removedAt = undefined;
-  delete query.radius;
 
   aggregationPipelines.push({
     $geoNear: {
@@ -54,7 +57,7 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
     }
   });
 
-  if (pagination.skip) { aggregationPipelines.push({ $skip: pagination.skip }); }
+  if (pagination.skip)  { aggregationPipelines.push({ $skip : pagination.skip }); }
   if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
 
   this.aggregate(aggregationPipelines)
