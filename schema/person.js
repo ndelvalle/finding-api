@@ -29,6 +29,7 @@ const personSchema = new Schema({
   contacts    : [{ name: String, phone: String, email: String }],
   photos      : [{ url: String, order: Number }],
   lastSeenAt  : { type: Date },
+  foundAt     : { type: Date },
   geo
 });
 
