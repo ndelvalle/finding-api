@@ -13,6 +13,7 @@ function createPersonRequest(req, res, next) {
 }
 
 function queryPersonRequests(req, res, next) {
+  if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   req.logger.info('Querying personRequests', req.query);
   req.model('PersonRequest').countAndFind(req.query)
     .skip(req.skip)
