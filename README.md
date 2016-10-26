@@ -6,12 +6,11 @@
 [![bitHound Dependencies](https://www.bithound.io/github/Solidalert/api/badges/dependencies.svg)](https://www.bithound.io/github/Solidalert/api/master/dependencies/npm)
 [![bitHound Dev Dependencies](https://www.bithound.io/github/Solidalert/api/badges/devDependencies.svg)](https://www.bithound.io/github/Solidalert/api/master/dependencies/npm)
 [![bitHound Code](https://www.bithound.io/github/Solidalert/api/badges/code.svg)](https://www.bithound.io/github/Solidalert/api)
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b82b37c652cedb7adc4f)
 
 :telescope:  API to store, expose, and notify about missing people to help find them
 
 
-## Build Setup
+### Build Setup
 
 ```bash
 # install dependencies
@@ -26,3 +25,6 @@ npm test
 # run code coverage
 npm run cover
 ```
+
+### Postman
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b82b37c652cedb7adc4f)
