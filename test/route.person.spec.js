@@ -22,7 +22,7 @@ describe('Person Routes', () => {
   before(done => api.start(done));
 
   beforeEach(() => { api.server.expressApp.request.user = { profile: { organization: '57ad47e540ae419411780bbf' } }; });
-  beforeEach(() => connection.db.collection('people').remove({}));
+  beforeEach(() => connection.db.collection('persons').remove({}));
 
   after(done => api.stop(done));
 
@@ -33,12 +33,12 @@ describe('Person Routes', () => {
 
         assert.equal(clientRes.statusCode, 201);
 
-        connection.db.collection('people').find({}).toArray((err, people) => {
+        connection.db.collection('persons').find({}).toArray((err, persons) => {
           if (err) { return cb(err); }
 
-          assert.equal(people.length, 1);
+          assert.equal(persons.length, 1);
 
-          const person = people[0];
+          const person = persons[0];
 
           clientRes.body.lastSeenAt = new Date(clientRes.body.lastSeenAt);
           clientRes.body.createdAt  = new Date(clientRes.body.createdAt);
@@ -88,9 +88,9 @@ describe('Person Routes', () => {
   });
 
   describe('Query Persons Route - GET /', () => {
-    beforeEach(done => connection.db.collection('people').insertOne(person1Fixture, done));
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
 
-    it('searches for people documents in the database and respons with 200 status code', (cb) => {
+    it('searches for persons documents in the database and respons with 200 status code', (cb) => {
       request.get('/person', { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
@@ -109,9 +109,9 @@ describe('Person Routes', () => {
   });
 
   describe.skip('Query Persons by geolocation Route - GET /', () => {
-    beforeEach(done => connection.db.collection('people').insertOne(person1Fixture, done));
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
 
-    it('searches for people documents by geolocation in the database', (cb) => {
+    it('searches for persons documents by geolocation in the database', (cb) => {
       const longitude = newPerson1Fixture.geo.loc[0];
       const latitude  = newPerson1Fixture.geo.loc[1];
       request.get(`/person/near/${longitude}/${latitude}`, { json: true }, (err, clientRes) => {
@@ -129,7 +129,7 @@ describe('Person Routes', () => {
       });
     });
 
-    it('searches for people documents by geolocation using 1km radius in the database', (cb) => {
+    it('searches for persons documents by geolocation using 1km radius in the database', (cb) => {
       const longitude = -58.371692;
       const latitude  = -34.654220;
 
@@ -145,7 +145,7 @@ describe('Person Routes', () => {
       });
     });
 
-    it('searches for people documents by geolocation using 10km radius in the database', (cb) => {
+    it('searches for persons documents by geolocation using 10km radius in the database', (cb) => {
       const longitude = -58.371692;
       const latitude  = -34.654220;
 
@@ -168,7 +168,7 @@ describe('Person Routes', () => {
   });
 
   describe('Get Person Route - GET /:id', () => {
-    beforeEach(done => connection.db.collection('people').insertOne(person1Fixture, done));
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
 
     it('retrieves a person document in the database and responds 200 status code', (cb) => {
       request.get(`person/${person1Fixture._id.toString()}`, { json: true }, (err, clientRes) => {
@@ -197,7 +197,7 @@ describe('Person Routes', () => {
 
   describe('Update Person by Id Route - PUT /:id', () => {
     it('updates a person document by id and responds with a 204 status code', (cb) => {
-      connection.db.collection('people').insertOne(person1Fixture, (err) => {
+      connection.db.collection('persons').insertOne(person1Fixture, (err) => {
         if (err) { return cb(err); }
 
         request.put(`person/${person1Fixture._id.toString()}`, { json: updatePerson1Fixture }, (err, clientRes) => {
@@ -205,7 +205,7 @@ describe('Person Routes', () => {
 
           assert.equal(clientRes.statusCode, 204);
 
-          connection.db.collection('people').findOne({ _id: person1Fixture._id }, (err, person) => {
+          connection.db.collection('persons').findOne({ _id: person1Fixture._id }, (err, person) => {
             if (err) { return cb(err); }
 
             assertContains(person, updatePerson1Fixture);
@@ -227,7 +227,7 @@ describe('Person Routes', () => {
   });
 
   describe('Remove Person Route - DELETE /:id', () => {
-    beforeEach(done => connection.db.collection('people').insertOne(person1Fixture, done));
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
 
     it('removes a person document from the database', (cb) => {
       request.delete(`person/${person1Fixture._id.toString()}`, (err, clientRes) => {
@@ -235,7 +235,7 @@ describe('Person Routes', () => {
 
         assert.equal(clientRes.statusCode, 204);
 
-        connection.db.collection('people').findOne({ _id: person1Fixture._id }, (err, person) => {
+        connection.db.collection('persons').findOne({ _id: person1Fixture._id }, (err, person) => {
           if (err) { return cb(err); }
 
           assert.ok(person.removedAt instanceof Date);
@@ -256,7 +256,7 @@ describe('Person Routes', () => {
 
   describe('Restore Person Route - POST /restore/:id', () => {
     beforeEach(done => {
-      connection.db.collection('people').insertOne(
+      connection.db.collection('persons').insertOne(
         Object.assign({}, person1Fixture, { removedAt: new Date() }),
         done
       );
@@ -268,7 +268,7 @@ describe('Person Routes', () => {
 
         assert.equal(clientRes.statusCode, 204);
 
-        connection.db.collection('people').findOne({ _id: person1Fixture._id }, (err, person) => {
+        connection.db.collection('persons').findOne({ _id: person1Fixture._id }, (err, person) => {
           if (err) { return cb(err); }
 
           assert.ok(!person.removedAt);
