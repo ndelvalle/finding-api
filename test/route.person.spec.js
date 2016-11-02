@@ -108,6 +108,28 @@ describe('Person Routes', () => {
     });
   });
 
+  describe('Query Persons by Organization Route - GET /', () => {
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
+
+    it('searches for persons by organization id in the database ', (done) => {
+      const organizationid = '57ad47e540ae419411780bbf';
+      request.get(`/person/organization/${organizationid}`, { json: true }, (err, clientRes) => {
+        if (err) { return done(err); }
+
+        clientRes.body = clientRes.body.map(person => {
+          person.lastSeenAt  = new Date(person.lastSeenAt);
+          person.isBrowsable = true;
+          return person;
+        });
+
+        assert.equal(clientRes.statusCode, 200);
+        assertContains(clientRes.body, [newPerson1Fixture]);
+
+        done(null);
+      });
+    });
+  });
+
   describe.skip('Query Persons by geolocation Route - GET /', () => {
     beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
 
