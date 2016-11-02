@@ -85,6 +85,12 @@ function findPersonById(req, res, next) {
     });
 }
 
+function getPersonsByOrganization(req, res, next) {
+  req.logger.info('Querying persons by organization');
+  req.query = { organization: req.params.organizationId };
+  queryPerson(req, res, next);
+}
+
 function updatePersonById(req, res, next) {
   req.logger.info('Updating person with id %s', req.params.id);
 
@@ -139,9 +145,10 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.get(   '/',                          queryPerson);
-router.get(   '/near/:longitude/:latitude', queryPersonByGeolocation);
-router.get(   '/:id([0-9a-f]{24})',         findPersonById);
+router.get(   '/',                                           queryPerson);
+router.get(   '/near/:longitude/:latitude',                  queryPersonByGeolocation);
+router.get(   '/:id([0-9a-f]{24})',                          findPersonById);
+router.get(   '/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
 
 router.post(  '/',            jwt.auth, jwt.session, createPerson);
 router.put(   '/:id',         jwt.auth, jwt.session, updatePersonById);

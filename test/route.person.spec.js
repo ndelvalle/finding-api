@@ -8,7 +8,9 @@ const assert         = require('assert');
 const assertContains = require('assert-contains');
 
 const newPerson1Fixture    = require('./fixture/person/new-person-1');
+const newPerson2Fixture    = require('./fixture/person/new-person-2');
 const person1Fixture       = require('./fixture/person/person-1');
+const person2Fixture       = require('./fixture/person/person-2');
 const updatePerson1Fixture = require('./fixture/person/update-person-1');
 
 const api        = require('../');
@@ -88,7 +90,7 @@ describe('Person Routes', () => {
   });
 
   describe('Query Persons Route - GET /', () => {
-    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
+    beforeEach(done => connection.db.collection('persons').insertMany([person1Fixture, person2Fixture], done));
 
     it('searches for persons documents in the database and respons with 200 status code', (cb) => {
       request.get('/person', { json: true }, (err, clientRes) => {
@@ -101,9 +103,48 @@ describe('Person Routes', () => {
         });
 
         assert.equal(clientRes.statusCode, 200);
-        assertContains(clientRes.body, [newPerson1Fixture]);
+        assertContains(clientRes.body, [newPerson1Fixture, newPerson2Fixture]);
 
         cb(null);
+      });
+    });
+
+    it('searches for persons when the name is setted', (cb) => {
+      request.get('/person', { json: true, qs: { name: 'brian' }  }, (err, clientRes) => {
+        if (err) { return cb(err); }
+
+        clientRes.body = clientRes.body.map(person => {
+          person.lastSeenAt  = new Date(person.lastSeenAt);
+          person.isBrowsable = true;
+          return person;
+        });
+
+        assert.equal(clientRes.statusCode, 200);
+        assertContains(clientRes.body, [newPerson2Fixture]);
+
+        cb(null);
+      });
+    });
+  });
+
+  describe('Query Persons by Organization Route - GET /', () => {
+    beforeEach(done => connection.db.collection('persons').insertOne(person1Fixture, done));
+
+    it('searches for persons by organization id in the database ', (done) => {
+      const organizationid = '57ad47e540ae419411780bbf';
+      request.get(`/person/organization/${organizationid}`, { json: true }, (err, clientRes) => {
+        if (err) { return done(err); }
+
+        clientRes.body = clientRes.body.map(person => {
+          person.lastSeenAt  = new Date(person.lastSeenAt);
+          person.isBrowsable = true;
+          return person;
+        });
+
+        assert.equal(clientRes.statusCode, 200);
+        assertContains(clientRes.body, [newPerson1Fixture]);
+
+        done(null);
       });
     });
   });
