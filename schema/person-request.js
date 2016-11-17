@@ -7,6 +7,7 @@ const personRequestSchema = new Schema({
   description: { clothing: String, appearance: String, disappearance: String },
   contacts   : [{ name: String, phone: String, email: String }],
   lastSeenAt : { type: Date },
+  approved   : { type: Boolean, default: false },
   geo        : { type: String }
 });
 
