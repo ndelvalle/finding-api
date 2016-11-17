@@ -14,11 +14,11 @@ exports.up = function(db, done) {
     createdAt : new Date(),
     updatedAt : new Date(),
     __v       : 0
-  }, (err) => done(err));
+  }, err => done(err));
 };
 
 exports.down = function(db, done) {
   db.collection('organizations').removeOne({
     _id: new ObjectId('57ad47e540ae419411780bbf')
-  }, (err) => done(err));
+  }, err => done(err));
 };

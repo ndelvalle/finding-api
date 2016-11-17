@@ -22,7 +22,7 @@ function createUser(req, res, next) {
 
   req.auth0.management.users
     .create(req.body)
-    .then(user => {
+    .then((user) => {
       req.logger.verbose('Created user with id %s', user.userId);
 
       userProfile.auth0 = user.user_id;
@@ -55,7 +55,7 @@ function queryUsers(req, res, next) {
 
   req.auth0.management.users
     .getAll(params)
-    .then(users => {
+    .then((users) => {
       req.logger.verbose('Found %s users', users.length);
       return res.status(200).send(users);
     })
@@ -68,7 +68,7 @@ function findUserById(req, res, next) {
 
   req.auth0.management.users
     .get({ id })
-    .then(user => {
+    .then((user) => {
       req.logger.verbose('Found user with id %s', id);
       return res.status(200).send(user);
     })
@@ -89,7 +89,7 @@ function updateUserById(req, res, next) {
 
   req.auth0.management.users
     .update({ id }, req.body)
-    .then(user => {
+    .then((user) => {
       req.logger.verbose('Updated user with id %s', id);
 
       req.model('UserProfile').update({
@@ -116,7 +116,7 @@ function removeUserById(req, res, next) {
 
   req.auth0.management.users
     .delete({ id })
-    .then(user => {
+    .then((user) => {
       req.logger.verbose('Removed user with id %s', id);
       return res.status(204).send(user);
     })

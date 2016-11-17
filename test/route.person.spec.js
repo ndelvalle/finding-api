@@ -46,13 +46,13 @@ describe('Person Routes', () => {
           clientRes.body.createdAt  = new Date(clientRes.body.createdAt);
           clientRes.body.updatedAt  = new Date(clientRes.body.updatedAt);
 
-          clientRes.body.contacts = clientRes.body.contacts.map(contact => {
+          clientRes.body.contacts = clientRes.body.contacts.map((contact) => {
             contact.createdAt = new Date(contact.createdAt);
             contact.updatedAt = new Date(contact.updatedAt);
             return contact;
           });
 
-          clientRes.body.photos = clientRes.body.photos.map(photo => {
+          clientRes.body.photos = clientRes.body.photos.map((photo) => {
             photo.createdAt = new Date(photo.createdAt);
             photo.updatedAt = new Date(photo.updatedAt);
             return photo;
@@ -61,12 +61,12 @@ describe('Person Routes', () => {
           person._id          = person._id.toString();
           person.organization = person.organization.toString();
 
-          person.contacts = person.contacts.map(contact => {
+          person.contacts = person.contacts.map((contact) => {
             contact._id = contact._id.toString();
             return contact;
           });
 
-          person.photos = person.photos.map(photo => {
+          person.photos = person.photos.map((photo) => {
             photo._id = photo._id.toString();
             return photo;
           });
@@ -96,7 +96,7 @@ describe('Person Routes', () => {
       request.get('/person', { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        clientRes.body = clientRes.body.map(person => {
+        clientRes.body = clientRes.body.map((person) => {
           person.lastSeenAt  = new Date(person.lastSeenAt);
           person.isBrowsable = true;
           return person;
@@ -113,7 +113,7 @@ describe('Person Routes', () => {
       request.get('/person', { json: true, qs: { name: 'brian' }  }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        clientRes.body = clientRes.body.map(person => {
+        clientRes.body = clientRes.body.map((person) => {
           person.lastSeenAt  = new Date(person.lastSeenAt);
           person.isBrowsable = true;
           return person;
@@ -135,7 +135,7 @@ describe('Person Routes', () => {
       request.get(`/person/organization/${organizationid}`, { json: true }, (err, clientRes) => {
         if (err) { return done(err); }
 
-        clientRes.body = clientRes.body.map(person => {
+        clientRes.body = clientRes.body.map((person) => {
           person.lastSeenAt  = new Date(person.lastSeenAt);
           person.isBrowsable = true;
           return person;
@@ -158,7 +158,7 @@ describe('Person Routes', () => {
       request.get(`/person/near/${longitude}/${latitude}`, { json: true }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        clientRes.body = clientRes.body.map(person => {
+        clientRes.body = clientRes.body.map((person) => {
           person.lastSeenAt  = new Date(person.lastSeenAt);
           person.isBrowsable = true;
           return person;
@@ -195,7 +195,7 @@ describe('Person Routes', () => {
       }, (err, clientRes) => {
         if (err) { return cb(err); }
 
-        clientRes.body = clientRes.body.map(person => {
+        clientRes.body = clientRes.body.map((person) => {
           person.lastSeenAt  = new Date(person.lastSeenAt);
           person.isBrowsable = true;
           return person;
@@ -296,7 +296,7 @@ describe('Person Routes', () => {
   });
 
   describe('Restore Person Route - POST /restore/:id', () => {
-    beforeEach(done => {
+    beforeEach((done) => {
       connection.db.collection('persons').insertOne(
         Object.assign({}, person1Fixture, { removedAt: new Date() }),
         done

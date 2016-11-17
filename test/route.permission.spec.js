@@ -182,7 +182,7 @@ describe('Permission Routes', () => {
   });
 
   describe('Restore Permission Route - POST /restore/:id', () => {
-    beforeEach(done => {
+    beforeEach((done) => {
       connection.db.collection('permissions').insertOne(
         Object.assign({}, permission1Fixture, { removedAt: new Date() }),
         done

@@ -19,7 +19,7 @@ request = request.defaults({ baseUrl: 'http://localhost:8050' });
 describe('PersonRequest Routes', () => {
 
   before(done => api.start(done));
-  beforeEach(done => { connection.db.collection('personrequests').remove({}, done); });
+  beforeEach((done) => { connection.db.collection('personrequests').remove({}, done); });
   after(done => api.stop(done));
 
 
@@ -67,7 +67,7 @@ describe('PersonRequest Routes', () => {
   });
 
   describe('Query PersonRequest Route - GET /person-request', () => {
-    beforeEach((cb) => connection.db.collection('personrequests').insertOne(personRequest1Fixture, cb));
+    beforeEach(cb => connection.db.collection('personrequests').insertOne(personRequest1Fixture, cb));
 
     it('searches for a personRequest document by title in the database', (cb) => {
       request.get('/person-request', { json: true }, (err, clientRes) => {
@@ -81,7 +81,7 @@ describe('PersonRequest Routes', () => {
   });
 
   describe('Get PersonRequest Route - GET /person-request/:id', () => {
-    beforeEach( (cb) => connection.db.collection('personrequests').insertOne(personRequest1Fixture, cb));
+    beforeEach( cb => connection.db.collection('personrequests').insertOne(personRequest1Fixture, cb));
 
     it('retrieves a personRequest document in the database', (cb) => {
       request.get(`person-request/${personRequest1Fixture._id.toString()}`, { json: true }, (err, clientRes) => {
@@ -129,7 +129,7 @@ describe('PersonRequest Routes', () => {
   });
 
   describe('Remove PersonRequest Route - DELETE /person-request/:id', () => {
-    beforeEach( (cb) => connection.db.collection('personrequests').insertOne(personRequest1Fixture, cb));
+    beforeEach( cb => connection.db.collection('personrequests').insertOne(personRequest1Fixture, cb));
 
     it('removes a personRequest document from the database', (cb) => {
       request.delete(`person-request/${personRequest1Fixture._id.toString()}`, (err, clientRes) => {

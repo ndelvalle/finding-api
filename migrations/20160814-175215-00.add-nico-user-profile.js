@@ -16,11 +16,11 @@ exports.up = function(db, done) {
     createdAt    : new Date(),
     updatedAt    : new Date(),
     __v          : 0
-  }, (err) => done(err));
+  }, err => done(err));
 };
 
 exports.down = function(db, done) {
   db.collection('userprofiles').removeOne({
     _id: new ObjectId('57ad49a3cc8672aa14006c19')
-  }, (err) => done(err));
+  }, err => done(err));
 };
