@@ -23,6 +23,7 @@ const personRequestSchema = new Schema({
   contacts   : [{ name: String, phone: String, email: String }],
   lastSeenAt : { type: Date },
   approved   : { type: Boolean, default: false },
+  published  : { type: Boolean, default: true  },
   geo
 });
 
