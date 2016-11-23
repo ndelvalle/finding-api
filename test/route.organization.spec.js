@@ -182,7 +182,7 @@ describe('Organization Routes', () => {
   });
 
   describe('Restore Organization Route - POST /restore/:id', () => {
-    beforeEach(done => {
+    beforeEach((done) => {
       connection.db.collection('organizations').insertOne(
         Object.assign({}, organization1Fixture, { removedAt: new Date() }),
         done

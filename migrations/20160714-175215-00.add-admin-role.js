@@ -15,11 +15,11 @@ exports.up = function(db, done) {
     createdAt   : new Date(),
     updatedAt   : new Date(),
     __v         : 0
-  }, (err) => done(err));
+  }, err => done(err));
 };
 
 exports.down = function(db, done) {
   db.collection('roles').removeOne({
     _id: new ObjectId('57a2cada0e8c0d408651e6ff')
-  }, (err) => done(err));
+  }, err => done(err));
 };

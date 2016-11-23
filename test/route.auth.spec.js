@@ -19,12 +19,12 @@ const email = 'a@a.com';
 
 describe('Auth Routes', () => {
 
-  before((cb) => api.start(cb));
+  before(cb => api.start(cb));
   beforeEach((cb) => {
     api.server.expressApp.request.user = { user: { email } };
     cb(null);
   });
-  after( (cb) => api.stop(cb));
+  after( cb => api.stop(cb));
 
   describe('DB Auth - GET /auth', () => {
 

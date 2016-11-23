@@ -182,7 +182,7 @@ describe('Role Routes', () => {
   });
 
   describe('Restore Role Route - POST /restore/:id', () => {
-    beforeEach(done => {
+    beforeEach((done) => {
       connection.db.collection('roles').insertOne(
         Object.assign({}, role1Fixture, { removedAt: new Date() }),
         done
