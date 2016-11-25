@@ -23,9 +23,27 @@ function getCurrentUserProfile(req, res, next) {
   return res.sendFound(req.user);
 }
 
+function updateUserProfileById(req, res, next) {
+  req.logger.info('Updating user profile with id %s', req.params.id);
+
+  req.model('UserProfile').update({
+    _id: req.params.id
+  }, req.body, (err, results) => {
+    if (err) { return next(err); }
+
+    if (results.n < 1) {
+      req.logger.verbose('User profile not found');
+      return res.status(404).end();
+    }
+
+    req.logger.verbose('Profile updated');
+    res.status(204).end();
+  });
+}
+
 
 router.get('/:id([0-9a-f]{24})', findUserProfileById);
 router.get('/', jwt.auth, jwt.session, getCurrentUserProfile);
-
+router.put('/:id([0-9a-f]{24})', updateUserProfileById);
 
 module.exports = router;
