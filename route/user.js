@@ -80,8 +80,11 @@ function updateUserById(req, res, next) {
   req.logger.info('Updating user with id %s', id);
 
   const userProfile = {
-    role        : req.body.role,
-    organization:req.body.organization
+    role         : req.body.role,
+    organization : req.body.organization,
+    firstName    : req.body.firstName,
+    lastName     : req.body.lastName,
+    avatarUrl    : req.body.avatarUrl
   };
 
   delete req.body.role;
