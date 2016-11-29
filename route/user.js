@@ -76,26 +76,26 @@ function findUserById(req, res, next) {
 }
 
 function updateUserById(req, res, next) {
-  const id = req.params.id;
-  req.logger.info('Updating user with id %s', id);
+  const authId = req.params.id;
+  req.logger.info('Updating user with id %s', authId);
 
   const userProfile = {
-    role         : req.body.profile.role,
-    organization : req.body.profile.organization,
-    firstName    : req.body.profile.firstName,
-    lastName     : req.body.profile.lastName,
-    avatarUrl    : req.body.profile.avatarUrl
+    role         : req.body.role,
+    organization : req.body.organization,
+    firstName    : req.body.firstName,
+    lastName     : req.body.lastName,
+    avatarUrl    : req.body.avatarUrl
   };
   const userData = {
     name: req.body.name
   };
-  delete req.body.profile.role;
-  delete req.body.profile.organization;
+  delete req.body.role;
+  delete req.body.organization;
 
   req.auth0.management.users
-    .updateAppMetadata({ id: req.body.profile.auth0 }, userData )
+    .updateUserMetadata({ id: authId }, userData )
     .then((user) => {
-      req.logger.verbose('Updated user with id %s', id);
+      req.logger.verbose('Updated user with id %s', authId);
 
       req.model('UserProfile').update({
         auth0: req.body.profile.auth0
