@@ -86,17 +86,19 @@ function updateUserById(req, res, next) {
     lastName     : req.body.lastName,
     avatarUrl    : req.body.avatarUrl
   };
-
+  const userData = {
+    name: req.body.name
+  };
   delete req.body.role;
   delete req.body.organization;
 
   req.auth0.management.users
-    .update({ id }, req.body)
+    .updateUserMetadata({ id }, userData )
     .then((user) => {
       req.logger.verbose('Updated user with id %s', id);
 
       req.model('UserProfile').update({
-        auth0: req.params.id
+        auth0: id
       }, userProfile, (err, results) => {
         if (err) { return next(err); }
 
