@@ -80,20 +80,20 @@ function updateUserById(req, res, next) {
   req.logger.info('Updating user with id %s', id);
 
   const userProfile = {
-    role        : req.body.role,
-    organization:req.body.organization
+    role         : req.body.role,
+    organization : req.body.organization
   };
 
   delete req.body.role;
   delete req.body.organization;
 
   req.auth0.management.users
-    .update({ id }, req.body)
+    .updateUserMetadata({ id }, req.body )
     .then((user) => {
       req.logger.verbose('Updated user with id %s', id);
 
       req.model('UserProfile').update({
-        auth0: req.params.id
+        auth0: id
       }, userProfile, (err, results) => {
         if (err) { return next(err); }
 

@@ -97,17 +97,13 @@ describe('User Routes', () => {
 
   describe('Update User by Id Route - PUT /:id', () => {
     it('updates a user from Auth0 by id and responds with a 204 status code', (cb) => {
-      sinon.stub(users, 'update', () => Promise.resolve(user1Fixture));
-
+      sinon.stub(users, 'updateUserMetadata', () => Promise.resolve(user1Fixture));
       connection.db.collection('userprofiles').insertOne(userProfile1Fixture, (err) => {
         if (err) { return cb(err); }
-
         request.put(`user/${user1Fixture.userId}`, { json: updateUser1Fixture }, (err, clientRes) => {
           if (err) { return cb(err); }
-
           assert.equal(clientRes.statusCode, 204);
-
-          users.update.restore();
+          users.updateUserMetadata.restore();
           cb(null);
         });
       });

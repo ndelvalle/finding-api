@@ -5,6 +5,7 @@ const roleSchema = new Schema({
   auth0       : { type: String,   required: true, unique: true },
   role        : { type: ObjectId, required: true, ref: 'Role' },
   organization: { type: ObjectId, ref: 'Role' },
+  avatarUrl   : { type: String },
   metadata    : { type: Object }
 });
 
