@@ -81,8 +81,7 @@ function updateUserById(req, res, next) {
 
   const userProfile = {
     role         : req.body.role,
-    organization : req.body.organization,
-    avatarUrl    : req.body.avatarUrl
+    organization : req.body.organization
   };
   const userData = {
     name: req.body.name
