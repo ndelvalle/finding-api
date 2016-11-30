@@ -76,8 +76,8 @@ function findUserById(req, res, next) {
 }
 
 function updateUserById(req, res, next) {
-  const authId = req.params.id;
-  req.logger.info('Updating user with id %s', authId);
+  const id = req.params.id;
+  req.logger.info('Updating user with id %s', id);
 
   const userProfile = {
     role         : req.body.role,
@@ -93,12 +93,12 @@ function updateUserById(req, res, next) {
   delete req.body.organization;
 
   req.auth0.management.users
-    .updateUserMetadata({ id: authId }, userData )
+    .updateUserMetadata({ id }, userData )
     .then((user) => {
-      req.logger.verbose('Updated user with id %s', authId);
+      req.logger.verbose('Updated user with id %s', id);
 
       req.model('UserProfile').update({
-        auth0: req.body.profile.auth0
+        auth0: id
       }, userProfile, (err, results) => {
         if (err) { return next(err); }
 
