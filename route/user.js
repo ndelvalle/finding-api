@@ -83,14 +83,12 @@ function updateUserById(req, res, next) {
     role         : req.body.role,
     organization : req.body.organization
   };
-  const userData = {
-    name: req.body.name
-  };
+
   delete req.body.role;
   delete req.body.organization;
 
   req.auth0.management.users
-    .updateUserMetadata({ id }, userData )
+    .updateUserMetadata({ id }, req.body )
     .then((user) => {
       req.logger.verbose('Updated user with id %s', id);
 
