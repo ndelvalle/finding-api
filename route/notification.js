@@ -23,13 +23,22 @@ function createNotification(req, res, next) {
     sentAt    : req.body.sentAt,
     createdBy : req.body.createdBy
   };
-  request.post('http://localhost:8000/bundle/', { json: notification }, (err, clientRes, body) => {
-    if (err) { return next(err); }
-    if (clientRes.statusCode !== 200) { return res.status(clientRes.statusCode).send(body).end(); }
+  req.auth0.management.users.getAll()
+  .then((users) => {
+    notification.users = users.map( a => a.user_id );
+    return notification;
+  })
+  .then((notification) => {
+    console.log(notification);
+    request.post('http://localhost:8000/bundle/', { json: notification }, (err, clientRes, body) => {
+      if (err) { return next(err); }
+      if (clientRes.statusCode !== 200) {
+        return res.status(clientRes.statusCode).send(body).end();
+      }
+      req.logger.verbose('Sending created notification to client');
 
-    req.logger.verbose('Sending created notification to client');
-
-    res.status(200).send(body);
+      res.status(200).send(body);
+    });
   });
 }
 
