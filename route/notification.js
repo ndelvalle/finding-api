@@ -1,11 +1,12 @@
 const Router = require('express').Router;
 const router = new Router();
 const request  = require('request');
+const config = require('../config');
 
 
 function getNotifications(req, res, next) {
   req.logger.info('Querying notifications', req.query);
-  request.get('http://localhost:8000/bundle/', (err, clientRes, body) => {
+  request.get(`${config.notificationsApi.url}bundle/`, (err, clientRes, body) => {
     if (err) { return next(err); }
     if (clientRes.statusCode !== 200) { return res.status(clientRes.statusCode).send(body).end(); }
     req.logger.verbose('Sending notifications to user client');
@@ -29,8 +30,7 @@ function createNotification(req, res, next) {
     return notification;
   })
   .then((notification) => {
-    console.log(notification);
-    request.post('http://localhost:8000/bundle/', { json: notification }, (err, clientRes, body) => {
+    request.post(`${config.notificationsApi.url}bundle/`, { json: notification }, (err, clientRes, body) => {
       if (err) { return next(err); }
       if (clientRes.statusCode !== 200) {
         return res.status(clientRes.statusCode).send(body).end();
