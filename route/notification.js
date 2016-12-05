@@ -1,12 +1,11 @@
 const Router = require('express').Router;
 const router = new Router();
 const request  = require('request');
-const config = require('../config');
 
 
 function getNotifications(req, res, next) {
   req.logger.info('Querying notifications', req.query);
-  request.get(`${config.notificationsApi.url}bundle/`, (err, clientRes, body) => {
+  request.get(`${req.config.notificationsApi.url}bundle/`, (err, clientRes, body) => {
     if (err) { return next(err); }
     if (clientRes.statusCode !== 200) { return res.status(clientRes.statusCode).send(body).end(); }
     req.logger.verbose('Sending notifications to user client');
@@ -18,6 +17,7 @@ function createNotification(req, res, next) {
   req.logger.info('Creating a notification', req.body);
   const notification = {
     name      : req.body.name,
+    title     : req.body.title,
     body      : req.body.body,
     type      : req.body.type,
     status    : req.body.status,
@@ -30,7 +30,7 @@ function createNotification(req, res, next) {
     return notification;
   })
   .then((notification) => {
-    request.post(`${config.notificationsApi.url}bundle/`, { json: notification }, (err, clientRes, body) => {
+    request.post(`${req.config.notificationsApi.url}bundle/`, { json: notification }, (err, clientRes, body) => {
       if (err) { return next(err); }
       if (clientRes.statusCode !== 200) {
         return res.status(clientRes.statusCode).send(body).end();
