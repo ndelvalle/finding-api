@@ -2,6 +2,7 @@ const Schema   = require('mongoose').Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 const EARTH_RADIUS = 6378.1;
+
 const validators   = {
   location: {
     validator(v) { return v.length === 2; },
@@ -44,7 +45,7 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
 
   query.isMissing = query.isMissing === 'true';
 
-  // Because of soft remove mongoose plugin
+  // due of soft remove mongoose plugin
   query.removedAt = undefined;
 
   aggregationPipelines.push({
