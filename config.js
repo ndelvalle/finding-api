@@ -9,6 +9,9 @@ const config = milieu('api', {
   mongo: {
     url: 'mongodb://localhost/api'
   },
+  notificationsApi: {
+    url: 'http://localhost:8000/'
+  },
   cors: {
 
   },
