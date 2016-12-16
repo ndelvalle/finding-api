@@ -5,7 +5,9 @@ const request  = require('request');
 
 function getNotifications(req, res, next) {
   req.logger.info('Querying notifications', req.query);
-  request.get(`${req.config.notificationsApi.url}bundle/`, (err, clientRes, body) => {
+  console.log('entroooo');
+  console.log(`${req.config.notificationsApi.url}organization/${req.params.organizationId}/notification-set`);
+  request.get(`${req.config.notificationsApi.url}organization/${req.params.organizationId}/notification-set`, (err, clientRes, body) => {
     if (err) { return next(err); }
     if (clientRes.statusCode !== 200) { return res.status(clientRes.statusCode).send(body).end(); }
     req.logger.verbose('Sending notifications to user client');
@@ -16,13 +18,15 @@ function getNotifications(req, res, next) {
 function createNotification(req, res, next) {
   req.logger.info('Creating a notification', req.body);
   const notification = {
-    name      : req.body.name,
-    title     : req.body.title,
-    body      : req.body.body,
-    type      : req.body.type,
-    status    : req.body.status,
-    sentAt    : req.body.sentAt,
-    createdBy : req.body.createdBy
+    name       : req.body.name,
+    title      : req.body.title,
+    body       : req.body.body,
+    type       : req.body.type,
+    status     : req.body.status,
+    sentAt     : req.body.sentAt,
+    scheduledAt: req.body.scheduledAt,
+    createdBy  : req.body.createdBy,
+    geo        : req.body.geo
   };
   req.auth0.management.users.getAll()
   .then((users) => {
@@ -30,7 +34,7 @@ function createNotification(req, res, next) {
     return notification;
   })
   .then((notification) => {
-    request.post(`${req.config.notificationsApi.url}bundle/`, { json: notification }, (err, clientRes, body) => {
+    request.post(`${req.config.notificationsApi.url}organization/${req.params.organizationId}/notification-set`, { json: notification }, (err, clientRes, body) => {
       if (err) { return next(err); }
       if (clientRes.statusCode !== 200) {
         return res.status(clientRes.statusCode).send(body).end();
@@ -42,7 +46,7 @@ function createNotification(req, res, next) {
   });
 }
 
-router.get('/notification-set', getNotifications);
-router.post(  '/',    createNotification);
+router.get('/organization/:organizationId/notification-set', getNotifications);
+router.post(  '/organization/:organizationId/notification-set',    createNotification);
 
 module.exports = router;
