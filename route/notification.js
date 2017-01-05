@@ -5,11 +5,12 @@ const request  = require('request');
 
 function getNotifications(req, res, next) {
   req.logger.info('Querying notifications', req.query);
-  console.log('entroooo');
-  console.log(`${req.config.notificationsApi.url}organization/${req.params.organizationId}/notification-set`);
   request.get(`${req.config.notificationsApi.url}organization/${req.params.organizationId}/notification-set`, (err, clientRes, body) => {
     if (err) { return next(err); }
-    if (clientRes.statusCode !== 200) { return res.status(clientRes.statusCode).send(body).end(); }
+    if (clientRes.statusCode !== 200) {
+      return res.status(clientRes.statusCode).send(body).end();
+    }
+
     req.logger.verbose('Sending notifications to user client');
     res.status(200).send(body);
   });
@@ -28,6 +29,7 @@ function createNotification(req, res, next) {
     createdBy  : req.body.createdBy,
     geo        : req.body.geo
   };
+
   req.auth0.management.users.getAll()
   .then((users) => {
     notification.users = users.map( a => a.user_id );

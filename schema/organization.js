@@ -7,10 +7,10 @@ const organizationSchema = new Schema({
   phones     : { type: [String] },
   email      : { type: [String] }
 });
+
 organizationSchema.pre('save', function(next) {
-  if (!this.get('displayName')) {
-    this.displayName = this.get('name');
-  }
+  this.displayName = this.get('displayName') || this.get('name');
+
   next();
 });
 
