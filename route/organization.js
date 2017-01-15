@@ -30,7 +30,7 @@ function queryOrganization(req, res, next) {
 }
 
 function findOrganizationById(req, res, next) {
-  req.logger.info('Finding organization with id %s', req.params.id);
+  req.logger.info(`Finding organization with id ${req.params.id}`);
 
   req.model('Organization').findById(req.params.id)
     .lean()
@@ -44,7 +44,7 @@ function findOrganizationById(req, res, next) {
 }
 
 function updateOrganizationById(req, res, next) {
-  req.logger.info('Updating organization with id %s', req.params.id);
+  req.logger.info(`Updating organization with id ${req.params.id}`);
 
   req.model('Organization').update({
     _id: req.params.id
@@ -62,7 +62,7 @@ function updateOrganizationById(req, res, next) {
 }
 
 function removeOrganizationById(req, res, next) {
-  req.logger.info('Removing organization with id %s', req.params.id);
+  req.logger.info(`Removing organization with id ${req.params.id}`);
 
   req.model('Organization').remove({
     _id: req.params.id
@@ -79,7 +79,8 @@ function removeOrganizationById(req, res, next) {
 }
 
 function restoreOrganizationById(req, res, next) {
-  req.logger.info('Restoring organization with id %s', req.params.id);
+  req.logger.info(`Restoring organization with id ${req.params.id}`);
+
   req.model('Organization').restore({
     _id: req.params.id
   }, (err, results) => {
