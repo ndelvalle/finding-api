@@ -48,7 +48,31 @@ function createNotification(req, res, next) {
   });
 }
 
-router.get('/organization/:organizationId/notification-set', getNotifications);
-router.post(  '/organization/:organizationId/notification-set',    createNotification);
+function sendNotification(req, res, next) {
+  req.logger.info('Sending a push notification');
+  const headers =  {
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI3ZmUwMThmYS00MzM4LTRjZTEtOGI5Mi1kZTQxZDQzZjkwZDAifQ.83428txIeRM57XWVS99k8t1FFt5RRb7V9Cc3EDMocaQ',
+    'Content-Type': 'application/json'
+  };
+  const notification = {
+    tokens: ['97aca31fc30f456b9d0fa7db8a25ff907916eb5a7b37486e2efad0a18623cc17'],
+    profile: 'test_app',
+    notification: {
+      message: 'Hola Mati! en Vicente Lopez se encuentran perdidos 20 personas! ayudanos a encontrarlos!'
+    }
+  };
+  request.post('https://api.ionic.io/push/notifications', { headers, json: notification }, (err, clientRes, body) => {
+    if (err) { return next(err); }
+    if (clientRes.statusCode !== 200) {
+      return res.status(clientRes.statusCode).send(body).end();
+    }
+    req.logger.verbose('Sending push notification to device');
+    res.status(200).send(body);
+  });
+}
+
+router.get(  '/organization/:organizationId/notification-set',  getNotifications);
+router.post( '/organization/:organizationId/notification-set',  createNotification);
+router.post( '/organization/:organizationId/notification-push', sendNotification);
 
 module.exports = router;
