@@ -1,23 +1,6 @@
 const Router   = require('express').Router;
 const router   = new Router();
 const request  = require('request');
-const jwt = require('../lib/jwt');
-
-
-function checkType(req, res, next) {
-  const headers =  {
-    Authorization: req.headers.authorization,
-    'Content-Type': 'application/json'
-  };
-  request.get(`https://keepers-co.auth0.com/api/v2/users/${req.user.sub}`, { headers }, (err, clientRes, body) => {
-    if (err) { return next(err); }
-    const userData = JSON.parse(body);
-    if (userData.user_metadata.types.indexOf('cms') > -1) {
-      res.status(200).end();
-    }
-    res.status(403).end('You are not allow to log in the cms');
-  });
-}
 
 function authenticate(req, res, next) {
   req.logger.verbose('Authenticating user through Auth0');
@@ -69,7 +52,6 @@ function auth0FailedCallback(req, res, next) {
 router.post('/',            authenticate);
 router.get( '/db-callback', auth0Callback);
 router.get( '/db-fail',     auth0FailedCallback);
-router.get( '/:id/type', jwt.auth, jwt.session,  checkType);
 
 
 module.exports = router;
