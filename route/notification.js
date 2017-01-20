@@ -41,14 +41,16 @@ function sendNotification(req, res, next) {
     Authorization: req.headers.authorization,
     'Content-Type': 'application/json'
   };
-  const notification = {
-    tokens: ['97aca31fc30f456b9d0fa7db8a25ff907916eb5a7b37486e2efad0a18623cc17'],
-    profile: 'test_app',
-    notification: {
-      message: 'Hola Mati! en Vicente Lopez se encuentran perdidos 20 personas! ayudanos a encontrarlos!'
-    }
-  };
-  request.post('https://api.ionic.io/push/notifications', { headers, json: notification }, (err, clientRes, body) => {
+  // const notification = {
+  //   tokens: ['97aca31fc30f456b9d0fa7db8a25ff907916eb5a7b37486e2efad0a18623cc17'],
+  //   profile: 'test_app',
+  //   notification: {
+  //     message: 'Hola Mati! en V
+  // icente Lopez se encuentran perdidos 20 personas! ayudanos a encontrarlos!'
+  //   }
+  // };
+  // TODO REFACTOR THIS
+  request.post('https://api.ionic.io/push/notifications', { headers, json: {} }, (err, clientRes, body) => {
     if (err) { return next(err); }
     if (clientRes.statusCode !== 200) {
       return res.status(clientRes.statusCode).send(body).end();
