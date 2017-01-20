@@ -4,6 +4,7 @@ const router = new Router();
 
 function createPersonRequest(req, res, next) {
   req.logger.info('Creating personRequest', req.body);
+
   req.model('PersonRequest').create(req.body, (err, personRequest) => {
     if (err) { return next(err); }
 
@@ -15,6 +16,7 @@ function createPersonRequest(req, res, next) {
 function queryPersonRequests(req, res, next) {
   if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   req.logger.info('Querying personRequests', req.query);
+
   req.model('PersonRequest').countAndFind(req.query)
     .skip(req.skip)
     .limit(req.limit)
@@ -30,6 +32,7 @@ function queryPersonRequests(req, res, next) {
 
 function findPersonRequestById(req, res, next) {
   req.logger.info('Finding personRequest with id %s', req.params.id);
+
   req.model('PersonRequest').findById(req.params.id)
     .lean()
     .exec((err, personRequest) => {
@@ -43,6 +46,7 @@ function findPersonRequestById(req, res, next) {
 
 function updatePersonRequestById(req, res, next) {
   req.logger.info('Updating personRequest with id %s', req.params.id);
+
   req.model('PersonRequest').update({
     _id: req.params.id
   }, req.body, (err, results) => {
@@ -59,6 +63,7 @@ function updatePersonRequestById(req, res, next) {
 
 function removePersonRequestById(req, res, next) {
   req.logger.info('Removing personRequest with id %s', req.params.id);
+
   req.model('PersonRequest').remove({
     _id: req.params.id
   }, (err, results) => {
@@ -75,6 +80,7 @@ function removePersonRequestById(req, res, next) {
 
 function restorePersonRequestById(req, res, next) {
   req.logger.info('Restoring personRequest with id %s', req.params.id);
+
   req.model('PersonRequest').restore({
     _id: req.params.id
   }, (err, results) => {

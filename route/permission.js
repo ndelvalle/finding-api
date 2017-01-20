@@ -30,7 +30,7 @@ function queryPermission(req, res, next) {
 }
 
 function findPermissionById(req, res, next) {
-  req.logger.info('Finding permission with id %s', req.params.id);
+  req.logger.info(`Finding permission with id ${req.params.id}`);
 
   req.model('Permission').findById(req.params.id)
     .lean()
@@ -44,7 +44,7 @@ function findPermissionById(req, res, next) {
 }
 
 function updatePermissionById(req, res, next) {
-  req.logger.info('Updating permission with id %s', req.params.id);
+  req.logger.info(`Updating permission with id ${req.params.id}`);
 
   req.model('Permission').update({
     _id: req.params.id
@@ -62,7 +62,7 @@ function updatePermissionById(req, res, next) {
 }
 
 function removePermissionById(req, res, next) {
-  req.logger.info('Removing permission with id %s', req.params.id);
+  req.logger.info(`Removing permission with id ${req.params.id}`);
 
   req.model('Permission').remove({
     _id: req.params.id
@@ -79,7 +79,8 @@ function removePermissionById(req, res, next) {
 }
 
 function restorePermissionById(req, res, next) {
-  req.logger.info('Restoring permission with id %s', req.params.id);
+  req.logger.info(`Restoring permission with id ${req.params.id}`);
+
   req.model('Permission').restore({
     _id: req.params.id
   }, (err, results) => {
