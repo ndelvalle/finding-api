@@ -75,19 +75,6 @@ function findUserById(req, res, next) {
     .catch(err => res.status(err.statusCode).send(err));
 }
 
-function checkTypeByUserId(req, res, next) {
-  const id = req.params.id;
-  req.auth0.management.users
-    .get({ id })
-    .then((user) => {
-      if (user.user_metadata.types.indexOf('cms') > -1) {
-        return res.status(200).end();
-      }
-      return res.status(403).end('You are not allow to log in the cms');
-    })
-    .catch(err => res.status(err.statusCode).send(err));
-}
-
 function updateUserById(req, res, next) {
   const id = req.params.id;
   req.logger.info('Updating user with id %s', id);
@@ -141,7 +128,6 @@ router.get(   '/',       queryUsers);
 router.get(   '/:id',    findUserById);
 router.put(   '/:id',    updateUserById);
 router.delete('/:id',    removeUserById);
-router.get(   '/:id/type', checkTypeByUserId);
 
 
 module.exports = router;
