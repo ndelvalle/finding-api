@@ -27,6 +27,12 @@ const config = milieu('api', {
       handleExceptions               : true,
       humanReadableUnhandledException: true,
       colorize                       : true
+    },
+    loggly: {
+      inputToken: '${LOGGLY_TOKEN}',
+      subdomain : '${LOGGLY_DOMAIN}',
+      tags: ['findearth-api:dev'],
+      json: true
     }
   },
   auth0: {

@@ -1,8 +1,9 @@
 const winston            = require('winston');
 const winstonChildLogger = require('winston-child-logger');
 const SentryTransport    = require('winston-sentry-transport');
-const config             = require('./config');
+require('winston-loggly-bulk');
 
+const config = require('./config');
 
 const logger = winstonChildLogger(new winston.Logger());
 
@@ -22,6 +23,10 @@ if (config.logger.console) {
 
 if (config.logger.sentry) {
   logger.add(SentryTransport, config.logger.sentry);
+}
+
+if (config.logger.loggly) {
+  logger.add(winston.transports.Loggly, config.logger.loggly);
 }
 
 
