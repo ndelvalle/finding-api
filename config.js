@@ -31,7 +31,7 @@ const config = milieu('api', {
     loggly: {
       inputToken: '${LOGGLY_TOKEN}',
       subdomain : '${LOGGLY_DOMAIN}',
-      tags: ['findearth-api:dev'],
+      tags: ['findearth-api-dev'],
       json: true
     }
   },
