@@ -19,7 +19,7 @@ const config = milieu('api', {
   },
   logger: {
     sentry: {
-      dsn: ''
+      dsn: '${SENTRY_DSN}'
     },
     console: {
       level                          : 'silly',
