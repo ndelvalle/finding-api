@@ -43,10 +43,12 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
-  query.isMissing = query.isMissing === 'true';
+  query.isMissing = query.isMissing !== 'false';
 
   // due of soft remove mongoose plugin
-  query.removedAt = undefined;
+  query.removedAt = null;
+
+  console.log('la query....', query);
 
   aggregationPipelines.push({
     $geoNear: {
