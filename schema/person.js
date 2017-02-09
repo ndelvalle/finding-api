@@ -46,9 +46,7 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   query.isMissing = query.isMissing !== 'false';
 
   // due of soft remove mongoose plugin
-  query.removedAt = null;
-
-  console.log('la query....', query);
+  query.removedAt = undefined;
 
   aggregationPipelines.push({
     $geoNear: {
