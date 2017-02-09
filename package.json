@@ -18,7 +18,7 @@
     "cover": "istanbul cover _mocha test/*.spec.js",
     "check-cover": "open coverage/lcov-report/index.html",
     "eslint": "eslint . --ext .js",
-    "explain-config": "./bin/api-explain-config"
+    "explain": "./bin/api-explain-config"
   },
   "dependencies": {
     "@risingstack/trace": "^2.23.3",
@@ -43,6 +43,7 @@
     "uuid": "^3.0.1",
     "winston": "^2.2.0",
     "winston-child-logger": "0.0.1",
+    "winston-loggly-bulk": "^1.4.0",
     "winston-sentry-transport": "0.0.1"
   },
   "devDependencies": {
