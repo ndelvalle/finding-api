@@ -14,8 +14,9 @@ module.exports = function(nomad) {
 
       if (mongoConfig.sslKey && mongoConfig.sslCert && mongoConfig.sslCA) {
 
-        const subSectionName = mongoConfig.url.match(/,/) ? 'replSet' : 'server';
-        const subSection     = mongoOpts[subSectionName] = {};
+        const subSectionName      = mongoConfig.url.match(/,/) ? 'replSet' : 'server';
+        mongoOpts[subSectionName] = {};
+        const subSection          = {};
 
         subSection.ssl         = true;
         subSection.sslValidate = mongoConfig.sslValidate;

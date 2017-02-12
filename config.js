@@ -9,15 +9,17 @@ const config = milieu('api', {
   mongo: {
     url: 'mongodb://localhost/api'
   },
-  notificationsApi: {
-    url: 'http://localhost:8000/'
+  service: {
+    urls : {
+      NotificationD: 'http://localhost:8000'
+    }
   },
   cors: {
 
   },
   logger: {
     sentry: {
-      dsn: ''
+      dsn: '${SENTRY_DSN}'
     },
     console: {
       level                          : 'silly',
@@ -25,6 +27,12 @@ const config = milieu('api', {
       handleExceptions               : true,
       humanReadableUnhandledException: true,
       colorize                       : true
+    },
+    loggly: {
+      inputToken: '${LOGGLY_TOKEN}',
+      subdomain : '${LOGGLY_DOMAIN}',
+      tags: ['findearth-api-dev'],
+      json: true
     }
   },
   auth0: {
@@ -45,7 +53,7 @@ const config = milieu('api', {
   },
   trace: {
     serviceName: '${TRACE_SERVICE_NAME}',
-    apiKey: '${TRACE_API_KEY}'
+    apiKey     : '${TRACE_API_KEY}'
   }
 });
 

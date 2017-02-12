@@ -1,8 +1,7 @@
 const async  = require('async');
 const Router = require('express').Router;
 const router = new Router();
-
-const jwt = require('../lib/jwt');
+const jwt    = require('../lib/jwt');
 
 
 function createPerson(req, res, next) {
@@ -16,7 +15,9 @@ function createPerson(req, res, next) {
   req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
-    if (!req.body.photos || !req.body.photos.length) { return sendReponse(req, res, person); }
+    if (!req.body.photos || !req.body.photos.length) {
+      return sendReponse(req, res, person);
+    }
 
     req.logger.verbose('Uploading person photos');
     async.map(req.body.photos, (item, cb) => {
@@ -59,8 +60,15 @@ function queryPerson(req, res, next) {
 function queryPersonByGeolocation(req, res, next) {
   req.logger.info('Querying person by geolocation', req.query);
 
-  if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
-  const location = { lng: req.params.longitude, lat: req.params.latitude };
+  if (req.query && req.query.name) {
+    req.query.name = new RegExp(req.query.name, 'i');
+  }
+
+  const location = {
+    lng: req.params.longitude,
+    lat: req.params.latitude
+  };
+
   req.model('Person').findNear(req.query, {
     skip : req.skip,
     limit: req.limit
@@ -145,10 +153,10 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.get(   '/',                                           queryPerson);
-router.get(   '/near/:longitude/:latitude',                  queryPersonByGeolocation);
-router.get(   '/:id([0-9a-f]{24})',                          findPersonById);
-router.get(   '/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
+router.get('/',                                           queryPerson);
+router.get('/near/:longitude/:latitude',                  queryPersonByGeolocation);
+router.get('/:id([0-9a-f]{24})',                          findPersonById);
+router.get('/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
 
 router.post(  '/',            jwt.auth, jwt.session, createPerson);
 router.put(   '/:id',         jwt.auth, jwt.session, updatePersonById);

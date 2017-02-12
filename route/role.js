@@ -30,7 +30,7 @@ function queryRole(req, res, next) {
 }
 
 function findRoleById(req, res, next) {
-  req.logger.info('Finding role with id %s', req.params.id);
+  req.logger.info(`Finding role with id ${req.params.id}`);
 
   req.model('Role').findById(req.params.id)
     .lean()
@@ -44,7 +44,7 @@ function findRoleById(req, res, next) {
 }
 
 function updateRoleById(req, res, next) {
-  req.logger.info('Updating role with id %s', req.params.id);
+  req.logger.info(`Updating role with id ${req.params.id}`);
 
   req.model('Role').update({
     _id: req.params.id
@@ -62,7 +62,7 @@ function updateRoleById(req, res, next) {
 }
 
 function removeRoleById(req, res, next) {
-  req.logger.info('Removing role with id %s', req.params.id);
+  req.logger.info(`Removing role with id ${req.params.id}`);
 
   req.model('Role').remove({
     _id: req.params.id
@@ -79,7 +79,7 @@ function removeRoleById(req, res, next) {
 }
 
 function restoreRoleById(req, res, next) {
-  req.logger.info('Restoring role with id %s', req.params.id);
+  req.logger.info(`Restoring role with id ${req.params.id}`);
   req.model('Role').restore({
     _id: req.params.id
   }, (err, results) => {
