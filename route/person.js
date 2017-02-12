@@ -72,11 +72,11 @@ function queryPersonByGeolocation(req, res, next) {
   req.model('Person').findNear(req.query, {
     skip : req.skip,
     limit: req.limit
-  }, location, (err, person) => {
+  }, location, (err, persons) => {
     if (err) { return next(err); }
 
     req.logger.verbose('Sending person to client');
-    res.sendQueried(person);
+    res.sendQueried(persons, persons.length);
   });
 }
 
