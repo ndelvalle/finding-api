@@ -21,7 +21,6 @@
     "explain": "./bin/api-explain-config"
   },
   "dependencies": {
-    "@risingstack/trace": "^2.23.3",
     "async": "^2.0.1",
     "auth0": "^2.3.1",
     "bcrypt": "^1.0.0",
@@ -58,7 +57,7 @@
     "methods": "^1.1.2",
     "mocha": "^3.0.2",
     "mongodb": "^2.2.4",
-    "nock": "^8.0.0",
+    "nock": "^9.0.4",
     "node-inspector": "^0.12.8",
     "nodemon": "^1.10.0",
     "pre-commit": "^1.1.3",
