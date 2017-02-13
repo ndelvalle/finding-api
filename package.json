@@ -47,10 +47,10 @@
   },
   "devDependencies": {
     "assert-contains": "0.0.1",
-    "eslint": "^3.13.1",
-    "eslint-config-airbnb": "^14.0.0",
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.2",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.9.0",
     "istanbul": "^0.4.4",
     "methods": "^1.1.2",
@@ -66,6 +66,6 @@
     "eslint"
   ],
   "engines": {
-    "node": ">=6"
+    "node": "6.9.4"
   }
 }

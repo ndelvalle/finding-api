@@ -17,7 +17,7 @@ function authenticate(req, res, next) {
   const auth0Body = {
     username,
     password,
-    client_id : auth0.clientID,
+    client_id : auth0.clientId,
     connection: auth0.connections.db,
     scope     : auth0.scope
   };

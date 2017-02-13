@@ -31,7 +31,7 @@ const config = milieu('api', {
     }
   },
   auth0: {
-    clientID    : '',
+    clientId    : '',
     clientSecret: '',
     token       : '',
     domain      : 'keepers-co.auth0.com',
