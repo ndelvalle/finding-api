@@ -11,9 +11,9 @@ config.auth0.clientID     = 'aaa';
 config.auth0.clientSecret = 'bbb';
 config.auth0.token        = 'ccc';
 
-config.AWS.accessKeyId     = '000';
-config.AWS.secretAccessKey = '111';
-config.AWS.region          = '222';
-config.AWS.bucket          = '333';
+config.aws.accessKeyId     = '000';
+config.aws.secretAccessKey = '111';
+config.aws.region          = '222';
+config.aws.bucket          = '333';
 
 module.exports = config;
