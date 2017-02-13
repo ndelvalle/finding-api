@@ -3,24 +3,19 @@ const milieu = require('milieu');
 const config = milieu('api', {
   env: 'DEV',
   server: {
-    port           : '${PORT}',
+    port           : '9090',
     maxResultsLimit: 1000
   },
   mongo: {
-    url: 'mongodb://localhost/api'
+    url: 'mongodb://localhost/findearth'
   },
   service: {
     urls : {
       NotificationD: 'http://localhost:8000'
     }
   },
-  cors: {
-
-  },
+  cors: {},
   logger: {
-    sentry: {
-      dsn: '${SENTRY_DSN}'
-    },
     console: {
       level                          : 'silly',
       timestamp                      : true,
@@ -29,27 +24,27 @@ const config = milieu('api', {
       colorize                       : true
     },
     loggly: {
-      inputToken: '${LOGGLY_TOKEN}',
-      subdomain : '${LOGGLY_DOMAIN}',
-      tags: ['findearth-api-dev'],
-      json: true
+      inputToken: '',
+      subdomain : 'keepers',
+      tags      : ['findearth-api-dev'],
+      json      : true
     }
   },
   auth0: {
-    clientID    : '${AUTH0_CLIENT_ID}',
-    clientSecret: '${AUTH0_CLIENT_SECRET}',
-    token       : '${AUTH0_TOKEN}',
+    clientID    : '',
+    clientSecret: '',
+    token       : '',
     domain      : 'keepers-co.auth0.com',
     callbackURL : '/auth/db-callback',
     authURL     : 'https://keepers-co.auth0.com/oauth/ro',
     connections : { db: 'Username-Password-Authentication' },
     scope       : 'openid name email'
   },
-  AWS: {
-    accessKeyId    : '${AWS_ACCESS_KEY_ID}',
-    secretAccessKey: '${AWS_SECRET_ACCESS_KEY}',
-    region         : '${AWS_REGION}',
-    bucket         : '${AWS_BUCKET}'
+  aws: {
+    accessKeyId    : '',
+    secretAccessKey: '',
+    region         : '',
+    bucket         : ''
   }
 });
 

@@ -3,6 +3,7 @@ coverage
 .DS_Store
 .env
 .vscode
+.apirc
 *.log
 *.todo
 *.sublime-workspace
