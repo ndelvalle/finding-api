@@ -1,6 +1,6 @@
 # api
 
-[![CircleCI](https://circleci.com/gh/FindEarth/api.svg?style=svg)](https://circleci.com/gh/FindEarth/api)
+[ ![Codeship Status for FindEarth/api](https://app.codeship.com/projects/9da98cb0-d372-0134-e4ef-426c815baba4/status?branch=master)](https://app.codeship.com/projects/201920)
 [![Coverage Status](https://coveralls.io/repos/github/Solidalert/api/badge.svg?branch=master)](https://coveralls.io/github/Solidalert/api?branch=master)
 [![bitHound Overall Score](https://www.bithound.io/github/Solidalert/api/badges/score.svg)](https://www.bithound.io/github/Solidalert/api)
 [![bitHound Dependencies](https://www.bithound.io/github/Solidalert/api/badges/dependencies.svg)](https://www.bithound.io/github/Solidalert/api/master/dependencies/npm)
