@@ -26,7 +26,7 @@ const personSchema = new Schema({
   gender      : { type: String, required: true, enum: ['M', 'F'] },
   isBrowsable : { type: Boolean, default: true, select: false },
   isMissing   : { type: Boolean, default: true },
-  description : { clothing: String, appearance: String, disappearance: String, additional: String },
+  description : { clothing: String, appearance: String, more: String },
   contacts    : [{ name: String, phone: String, email: String }],
   photos      : [{ url: String, order: Number }],
   lastSeenAt  : { type: Date },
@@ -43,7 +43,7 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
-  query.isMissing = query.isMissing === 'true';
+  query.isMissing = query.isMissing !== 'false';
 
   // due of soft remove mongoose plugin
   query.removedAt = undefined;
