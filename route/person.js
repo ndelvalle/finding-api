@@ -13,6 +13,7 @@ function createPerson(req, res, next) {
   req.body.organization = req.user.profile.organization;
 
   req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
+
   req.model('Person').create(req.body, (err, person) => {
     if (err) { return next(err); }
     if (!req.body.photos || !req.body.photos.length) {
@@ -41,7 +42,7 @@ function createPerson(req, res, next) {
 }
 
 function queryPerson(req, res, next) {
-  req.logger.info('Querying person', req.query);
+  req.logger.info('Querying persons', req.query);
 
   if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   req.model('Person').countAndFind(req.query)
@@ -49,11 +50,18 @@ function queryPerson(req, res, next) {
     .limit(req.limit)
     .sort(req.sort)
     .lean()
-    .exec((err, person, personCount) => {
+    .exec((err, persons) => {
       if (err) { return next(err); }
 
-      req.logger.verbose('Sending person to client');
-      res.sendQueried(person, personCount);
+      if (!req.user && req.user.profile.name.toLowerCase() === 'admin') {
+        persons = persons.map((p) => {
+          p.contacts = null;
+          return p;
+        });
+      }
+
+      req.logger.verbose('Sending persons to client');
+      res.sendQueried(persons, persons.length);
     });
 }
 
@@ -75,18 +83,28 @@ function queryPersonByGeolocation(req, res, next) {
   }, location, (err, persons) => {
     if (err) { return next(err); }
 
-    req.logger.verbose('Sending person to client');
+    if (!req.user && req.user.profile.name.toLowerCase() === 'admin') {
+      persons = persons.map((p) => {
+        p.contacts = null;
+        return p;
+      });
+    }
+
+    req.logger.verbose('Sending persons to client');
     res.sendQueried(persons, persons.length);
   });
 }
 
 function findPersonById(req, res, next) {
   req.logger.info('Finding person with id %s', req.params.id);
+
   req.model('Person').findById(req.params.id)
     .lean()
     .exec((err, person) => {
       if (err) { return next(err); }
       if (!person) { return res.status(404).end(); }
+
+      if (!req.user && req.user.profile.name.toLowerCase() === 'admin') { person.contacts = null; }
 
       req.logger.verbose('Sending person to client');
       res.sendFound(person);
@@ -112,12 +130,15 @@ function updatePersonById(req, res, next) {
       req.logger.verbose('Person not found');
       return res.status(404).end();
     }
+
     req.logger.verbose('Person updated');
     res.status(204).end();
   });
 }
 
 function removePersonById(req, res, next) {
+  req.logger.info('Removing person with id %s', req.params.id);
+
   req.model('Person').findById(req.params.id, (err, person) => {
     if (err) { return next(err); }
 
@@ -138,6 +159,7 @@ function removePersonById(req, res, next) {
 
 function restorePersonById(req, res, next) {
   req.logger.info('Restoring person with id %s', req.params.id);
+
   req.model('Person').restore({
     _id        : req.params.id,
     organizaton: req.user.profile.organizaton
@@ -148,15 +170,21 @@ function restorePersonById(req, res, next) {
       req.logger.verbose('Person not found');
       return res.status(404).end();
     }
+
     req.logger.verbose('Person restored');
     res.status(204).end();
   });
 }
 
-router.get('/',                                           queryPerson);
-router.get('/near/:longitude/:latitude',                  queryPersonByGeolocation);
-router.get('/:id([0-9a-f]{24})',                          findPersonById);
-router.get('/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
+router.get('/public/',                                           queryPerson);
+router.get('/public/near/:longitude/:latitude',                  queryPersonByGeolocation);
+router.get('/public/:id([0-9a-f]{24})',                          findPersonById);
+router.get('/public/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
+
+router.get('/',                                           jwt.auth, jwt.session, queryPerson);
+router.get('/near/:longitude/:latitude',                  jwt.auth, jwt.session, queryPersonByGeolocation);
+router.get('/:id([0-9a-f]{24})',                          jwt.auth, jwt.session, findPersonById);
+router.get('/organization/:organizationId([0-9a-f]{24})', jwt.auth, jwt.session, getPersonsByOrganization);
 
 router.post(  '/',            jwt.auth, jwt.session, createPerson);
 router.put(   '/:id',         jwt.auth, jwt.session, updatePersonById);
