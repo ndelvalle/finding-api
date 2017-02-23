@@ -123,11 +123,11 @@ function removeUserById(req, res, next) {
     .catch(err => res.status(err.statusCode).send(err));
 }
 
-router.post(  '/',    createUser);
-router.get(   '/',    queryUsers);
-router.get(   '/:id', findUserById);
-router.put(   '/:id', updateUserById);
-router.delete('/:id', removeUserById);
+router.post(  '/',       createUser);
+router.get(   '/',       queryUsers);
+router.get(   '/:id',    findUserById);
+router.put(   '/:id',    updateUserById);
+router.delete('/:id',    removeUserById);
 
 
 module.exports = router;

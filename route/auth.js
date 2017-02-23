@@ -2,7 +2,6 @@ const Router   = require('express').Router;
 const router   = new Router();
 const request  = require('request');
 
-
 function authenticate(req, res, next) {
   req.logger.verbose('Authenticating user through Auth0');
 
@@ -21,17 +20,15 @@ function authenticate(req, res, next) {
     connection: auth0.connections.db,
     scope     : auth0.scope
   };
-
   request.post(auth0.authURL, { json: auth0Body }, (err, clientRes, body) => {
     if (err) { return next(err); }
-    if (clientRes.statusCode !== 200) { return res.status(clientRes.statusCode).send(body).end(); }
-
+    if (clientRes.statusCode !== 200) {
+      return res.status(clientRes.statusCode).send(body).end();
+    }
     req.logger.verbose('Sending user token to client');
-
     res.status(200).send(body);
   });
 }
-
 
 function auth0Callback(req, res, next) {
   if (!req.user) {

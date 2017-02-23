@@ -20,7 +20,12 @@ function findUserProfileById(req, res, next) {
 }
 
 function getCurrentUserProfile(req, res, next) {
-  return res.sendFound(req.user);
+  const type = req.query.type;
+  const userTypes  = req.user.app_metadata.types;
+  if (userTypes.indexOf(type) > -1 || userTypes.indexOf('*') > -1) {
+    return res.sendFound(req.user);
+  }
+  return res.status(403).end('Access denied');
 }
 
 function updateUserProfileById(req, res, next) {
