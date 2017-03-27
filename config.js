@@ -9,11 +9,6 @@ const config = milieu('api', {
   mongo: {
     url: 'mongodb://localhost/findearth'
   },
-  service: {
-    urls : {
-      NotificationD: 'http://localhost:8000'
-    }
-  },
   cors: {},
   logger: {
     console: {
@@ -34,9 +29,9 @@ const config = milieu('api', {
     clientId    : '',
     clientSecret: '',
     token       : '',
-    domain      : 'keepers-co.auth0.com',
+    domain      : 'keepers.auth0.com',
     callbackURL : '/auth/db-callback',
-    authURL     : 'https://keepers-co.auth0.com/oauth/ro',
+    authURL     : 'https://keepers.auth0.com/oauth/ro',
     connections : { db: 'Username-Password-Authentication' },
     scope       : 'openid name email'
   },
