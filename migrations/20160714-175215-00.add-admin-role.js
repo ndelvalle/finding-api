@@ -10,7 +10,7 @@ exports.isIgnored    = false;
 exports.up = function(db, done) {
   db.collection('roles').insertOne({
     _id         : new ObjectId('57a2cada0e8c0d408651e6ff'),
-    name        : 'Admin',
+    name        : 'admin',
     description : 'Chuck Norris',
     createdAt   : new Date(),
     updatedAt   : new Date(),
