@@ -104,8 +104,8 @@ function updatePersonById(req, res, next) {
   req.logger.info('Updating person with id %s', req.params.id);
 
   req.model('Person').update({
-    _id        : req.params.id,
-    organizaton: req.user.user_metadata.organization
+    _id         : req.params.id,
+    organization: req.user.user_metadata.organization
   }, req.body, (err, results) => {
     if (err) { return next(err); }
 
