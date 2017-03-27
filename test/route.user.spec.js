@@ -4,7 +4,6 @@
 // TODO: refactor mocks and add test cases for wrong paths
 
 require('./config');
-require('./mock/jwt');
 
 let request  = require('request');
 const assert = require('assert');
