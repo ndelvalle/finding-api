@@ -22,7 +22,7 @@ function createPerson(req, res, next) {
 
     req.logger.verbose('Uploading person photos');
     async.map(req.body.photos, (item, cb) => {
-      req.aws.upload(item.data, person._id, item.order, cb);
+      req.aws.upload(item.data, person._id, cb);
     }, (err, uploadedFiles) => {
       if (err) { return next(err); }
 
