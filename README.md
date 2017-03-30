@@ -1,5 +1,5 @@
-# api
-[ ![Codeship Status for FindEarth/api](https://app.codeship.com/projects/9da98cb0-d372-0134-e4ef-426c815baba4/status?branch=develop)](https://app.codeship.com/projects/201920)
+# API | Find Earth
+[![Codeship](https://img.shields.io/codeship/08998b80-d320-0134-1787-029621bb9ebb/develop.svg)](https://app.codeship.com/projects/201920)
 [![Coverage Status](https://coveralls.io/repos/github/Solidalert/api/badge.svg?branch=master)](https://coveralls.io/github/Solidalert/api?branch=master)
 [![bitHound Overall Score](https://www.bithound.io/github/Solidalert/api/badges/score.svg)](https://www.bithound.io/github/Solidalert/api)
 [![bitHound Dependencies](https://www.bithound.io/github/Solidalert/api/badges/dependencies.svg)](https://www.bithound.io/github/Solidalert/api/master/dependencies/npm)
