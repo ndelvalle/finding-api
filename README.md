@@ -6,7 +6,7 @@
 [![bitHound Dev Dependencies](https://www.bithound.io/github/Solidalert/api/badges/devDependencies.svg)](https://www.bithound.io/github/Solidalert/api/master/dependencies/npm)
 [![bitHound Code](https://www.bithound.io/github/Solidalert/api/badges/code.svg)](https://www.bithound.io/github/Solidalert/api)
 
-:telescope:  API to store, expose, and notify about missing people to help find them
+> :telescope:  API to store, expose, and notify about missing people to help find them
 
 
 ### Build Setup
