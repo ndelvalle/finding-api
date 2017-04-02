@@ -5,37 +5,35 @@ const router        = new Router();
 
 
 function createPerson(req, res, next) {
-
-  const sendReponse = (req, res, person) => {
-    req.logger.verbose('Sending person to client');
-    res.sendCreated(person);
-  };
-
   req.body.organization = req.user.user_metadata.organization;
+  const body   = Object.assign({}, req.body, { photos: undefined });
+  const photos = req.body.photos;
 
-  req.logger.info('Creating person', Object.assign({}, req.body, { photos: undefined }));
-  req.model('Person').create(req.body, (err, person) => {
+  req.logger.info('Creating person', body);
+  req.model('Person').create(body, (err, person) => {
     if (err) { return next(err); }
+
     if (!req.body.photos || !req.body.photos.length) {
-      return sendReponse(req, res, person);
+      req.logger.verbose('Sending person to client');
+      return res.sendCreated(person);
     }
 
     req.logger.verbose('Uploading person photos');
-    async.map(req.body.photos, (item, cb) => {
-      req.aws.upload(item.data, person._id, cb);
-    }, (err, uploadedFiles) => {
-      if (err) { return next(err); }
-
-      person.photos = uploadedFiles.map((photo, index) => {
-        photo = photo || {};
-        const mapped = { url: photo.url, name: photo.name, order: index };
-        return mapped;
+    async.eachOf(photos, (value, index, cb) => {
+      req.aws.upload(value.data, `/photos/${person._id}/${index}.png`, (err, url) => {
+        value.url   = url;
+        value.order = index;
+        cb(null);
       });
+    }, (err) => {
+      if (err) { return next(err); }
+      person.photos = photos;
 
       req.logger.verbose('Saving uploaded photos to person model');
       person.save((err, person) => {
         if (err) { return next(err); }
-        sendReponse(req, res, person);
+        req.logger.verbose('Sending person to client');
+        return res.sendCreated(person);
       });
     });
   });
