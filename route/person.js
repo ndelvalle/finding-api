@@ -152,7 +152,7 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.get('/',                                           authorization, queryPerson);
+router.get('/',                                           queryPerson);
 router.get('/near/:longitude/:latitude',                  queryPersonByGeolocation);
 router.get('/:id([0-9a-f]{24})',                          findPersonById);
 router.get('/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
