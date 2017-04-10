@@ -40,7 +40,7 @@ function createPerson(req, res, next) {
 }
 
 function queryPerson(req, res, next) {
-  req.logger.info('Querying person', req.query);
+  // req.logger.info('Querying person', req.query);
 
   if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
   req.model('Person').countAndFind(req.query)
@@ -57,7 +57,7 @@ function queryPerson(req, res, next) {
 }
 
 function queryPersonByGeolocation(req, res, next) {
-  req.logger.info('Querying person by geolocation', req.query);
+  // req.logger.info('Querying person by geolocation', req.query);
 
   if (req.query && req.query.name) {
     req.query.name = new RegExp(req.query.name, 'i');
@@ -93,7 +93,7 @@ function findPersonById(req, res, next) {
 }
 
 function getPersonsByOrganization(req, res, next) {
-  req.logger.info('Querying persons by organization');
+  // req.logger.info('Querying persons by organization');
   req.query = { organization: req.params.organizationId };
   queryPerson(req, res, next);
 }
