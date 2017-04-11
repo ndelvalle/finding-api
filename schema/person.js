@@ -25,6 +25,7 @@ const personSchema = new Schema({
   age         : { type: Number, required: true, min: 0, max: 120 },
   gender      : { type: String, required: true, enum: ['M', 'F'] },
   isBrowsable : { type: Boolean, default: true, select: false },
+  isPublished   : { type: Boolean, default: true, required: true },
   isMissing   : { type: Boolean, default: true },
   description : { clothing: String, appearance: String, more: String },
   contacts    : [{ name: String, phone: String, email: String }],
