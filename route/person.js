@@ -22,6 +22,7 @@ function createPerson(req, res, next) {
     async.eachOf(photos, (value, index, cb) => {
       req.aws.upload(value.data, `photos/${person._id}/${index}.png`, (err, url) => {
         value.url   = url;
+        value.name  = index;
         value.order = index;
         cb(null);
       });

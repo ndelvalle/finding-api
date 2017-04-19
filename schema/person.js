@@ -28,7 +28,7 @@ const personSchema = new Schema({
   isMissing   : { type: Boolean, default: true },
   description : { clothing: String, appearance: String, more: String },
   contacts    : [{ name: String, phone: String, email: String }],
-  photos      : [{ url: String, order: Number }],
+  photos      : [{ url: String, name: String, order: Number }],
   lastSeenAt  : { type: Date },
   foundAt     : { type: Date },
   geo
