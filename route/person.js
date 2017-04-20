@@ -45,10 +45,7 @@ function queryPerson(req, res, next) {
   if (req.query.name) {
     req.query.name = new RegExp(req.query.name, 'i');
   }
-  let select = '';
-  if (!req.user) {
-    select = '-contacts';
-  }
+  const select = req.user ? '' : '-contacts';
   req.query.foundAt = { $exists: false };
   req.model('Person').countAndFind(req.query)
     .select(select)
