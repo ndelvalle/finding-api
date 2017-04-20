@@ -115,7 +115,10 @@ function findPersonBySlug(req, res, next) {
 
 function findPersonById(req, res, next) {
   req.logger.info('Finding person with id %s', req.params.id);
+
+  const select = req.user ? '' : '-contacts';
   req.model('Person').findById(req.params.id)
+    .select(select)
     .lean()
     .exec((err, person) => {
       if (err) { return next(err); }
