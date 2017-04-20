@@ -33,6 +33,7 @@
     "mongoose": "^4.5.5",
     "mongoose-count-and-find": "^1.0.0",
     "mongoose-cu-timestamps": "^1.0.0",
+    "mongoose-document-slugs": "^1.1.1",
     "mongoose-soft-remove": "^1.0.2",
     "on-finished": "^2.3.0",
     "pretty-ms": "^2.1.0",
@@ -62,6 +63,6 @@
     "eslint"
   ],
   "engines": {
-    "node": ">= 7.0.0"
+    "node": ">= 6"
   }
 }

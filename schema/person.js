@@ -1,5 +1,6 @@
-const Schema   = require('mongoose').Schema;
-const ObjectId = Schema.Types.ObjectId;
+const mongooseSlugs = require('mongoose-document-slugs');
+const Schema        = require('mongoose').Schema;
+const ObjectId      = Schema.Types.ObjectId;
 
 const EARTH_RADIUS = 6378.1;
 
@@ -25,7 +26,6 @@ const personSchema = new Schema({
   age         : { type: Number, required: true, min: 0, max: 120 },
   gender      : { type: String, required: true, enum: ['M', 'F'] },
   isBrowsable : { type: Boolean, default: true, select: false },
-  isMissing   : { type: Boolean, default: true },
   description : { clothing: String, appearance: String, more: String },
   contacts    : [{ name: String, phone: String, email: String }],
   photos      : [{ url: String, name: String, order: Number }],
@@ -34,19 +34,28 @@ const personSchema = new Schema({
   geo
 });
 
+personSchema.plugin(mongooseSlugs);
+
+personSchema.virtual('isFound').get(function() {
+  return this.foundAt !== undefined;
+}).set(function(val) {
+  this.foundAt = val ? new Date() : undefined;
+});
+
+personSchema.set('toJSON', { virtuals: true });
+personSchema.set('toObject', { virtuals: true });
+
 personSchema.static('findNear', function(query, pagination, location, cb) {
   const aggregationPipelines = [];
 
-  const radius = Number(query.radius);
-  delete query.radius;
-
+  const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
 
-  query.isMissing = query.isMissing !== 'false';
+  delete query.radius;
 
-  // due of soft remove mongoose plugin
-  query.removedAt = undefined;
+  query.removedAt = { $exists: false };
+  query.foundAt   = { $exists: false };
 
   aggregationPipelines.push({
     $geoNear: {
@@ -61,13 +70,9 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
 
   if (pagination.skip)  { aggregationPipelines.push({ $skip : pagination.skip }); }
   if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
+  aggregationPipelines.push({ $project: { contacts: false } });
 
-  this.aggregate(aggregationPipelines)
-    .exec((err, person) => {
-      if (err) { return cb(err); }
-
-      cb(null, person);
-    });
+  this.aggregate(aggregationPipelines).exec(cb);
 });
 
 module.exports = personSchema;

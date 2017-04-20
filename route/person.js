@@ -42,8 +42,31 @@ function createPerson(req, res, next) {
 
 function queryPerson(req, res, next) {
   // req.logger.info('Querying person', req.query);
+  if (req.query.name) {
+    req.query.name = new RegExp(req.query.name, 'i');
+  }
+  const select = req.user ? '' : '-contacts';
+  req.query.foundAt = { $exists: false };
+  req.model('Person').countAndFind(req.query)
+    .select(select)
+    .skip(req.skip)
+    .limit(req.limit)
+    .sort(req.sort)
+    .lean()
+    .exec((err, persons, personsCount) => {
+      if (err) { return next(err); }
 
-  if (req.query && req.query.name) { req.query.name = new RegExp(req.query.name, 'i'); }
+      req.logger.verbose('Sending persons to client');
+      res.sendQueried(persons, personsCount);
+    });
+}
+
+function queryFoundPerson(req, res, next) {
+  // req.logger.info('Querying found person', req.query);
+  if (req.query.name) {
+    req.query.name = new RegExp(req.query.name, 'i');
+  }
+  req.query.foundAt = { $exists: true, $ne: null };
   req.model('Person').countAndFind(req.query)
     .skip(req.skip)
     .limit(req.limit)
@@ -59,25 +82,35 @@ function queryPerson(req, res, next) {
 
 function queryPersonByGeolocation(req, res, next) {
   // req.logger.info('Querying person by geolocation', req.query);
-
-  if (req.query && req.query.name) {
+  if (req.query.name) {
     req.query.name = new RegExp(req.query.name, 'i');
   }
-
-  const location = {
-    lng: req.params.longitude,
-    lat: req.params.latitude
-  };
-
   req.model('Person').findNear(req.query, {
     skip : req.skip,
     limit: req.limit
-  }, location, (err, persons) => {
+  }, {
+    lng: req.params.longitude,
+    lat: req.params.latitude
+  }, (err, persons) => {
     if (err) { return next(err); }
 
     req.logger.verbose('Sending person to client');
-    res.sendQueried(persons, persons.length);
+    res.sendQueried(persons);
   });
+}
+
+function findPersonBySlug(req, res, next) {
+  req.logger.info(`Finding person with slug ${req.params.slug}`);
+
+  req.model('Person').findOne({ slug: req.params.slug })
+    .select('-contacts')
+    .lean()
+    .exec((err, person) => {
+      if (err) { return next(err); }
+
+      req.logger.verbose('Sending person to client');
+      res.sendFound(person);
+    });
 }
 
 function findPersonById(req, res, next) {
@@ -153,15 +186,15 @@ function restorePersonById(req, res, next) {
   });
 }
 
-router.get('/',                                           queryPerson);
-router.get('/near/:longitude/:latitude',                  queryPersonByGeolocation);
-router.get('/:id([0-9a-f]{24})',                          findPersonById);
-router.get('/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
-
-router.post(  '/',            authorization, createPerson);
-router.put(   '/:id',         authorization, updatePersonById);
-router.delete('/:id',         authorization, removePersonById);
-router.post(  '/restore/:id', authorization, restorePersonById);
-
+router.get(   '/',                                           queryPerson);
+router.post(  '/',                                           authorization, createPerson);
+router.get(   '/found',                                      authorization, queryFoundPerson);
+router.get(   '/near/:longitude/:latitude',                  queryPersonByGeolocation);
+router.get(   '/:id([0-9a-f]{24})',                          findPersonById);
+router.get(   '/:slug',                                      findPersonBySlug);
+router.put(   '/:id',                                        authorization, updatePersonById);
+router.delete('/:id',                                        authorization, removePersonById);
+router.get(   '/organization/:organizationId([0-9a-f]{24})', getPersonsByOrganization);
+router.post(  '/restore/:id',                                authorization, restorePersonById);
 
 module.exports = router;
