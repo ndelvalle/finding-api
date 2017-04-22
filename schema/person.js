@@ -51,6 +51,7 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
+  const project   = ['name', 'age', 'gender', 'description', 'photos', 'lastSeenAt', 'geo'];
 
   delete query.radius;
 
@@ -70,7 +71,10 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
 
   if (pagination.skip)  { aggregationPipelines.push({ $skip : pagination.skip }); }
   if (pagination.limit) { aggregationPipelines.push({ $limit: pagination.limit }); }
-  aggregationPipelines.push({ $project: { contacts: false } });
+  aggregationPipelines.push({ $project: project.reduce((t, c) => {
+    t[c] = 1;
+    return t;
+  }, {}) });
 
   this.aggregate(aggregationPipelines).exec(cb);
 });
