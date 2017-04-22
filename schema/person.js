@@ -51,7 +51,9 @@ personSchema.static('findNear', function(query, pagination, location, cb) {
   const radius    = Number(query.radius);
   const longitude = Number(location.lng);
   const latitude  = Number(location.lat);
-  const project   = ['name', 'age', 'gender', 'description', 'photos', 'lastSeenAt', 'geo'];
+  const project   = [
+    'name', 'age', 'gender', 'description', 'photos', 'lastSeenAt', 'geo', 'distance'
+  ];
 
   delete query.radius;
 
