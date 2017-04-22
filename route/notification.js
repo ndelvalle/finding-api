@@ -4,7 +4,7 @@ const request = require('request');
 
 
 function queryNotificationSets(req, res, next) {
-  req.logger.info('Querying NotificationSets', req.query);
+  // req.logger.info('Querying NotificationSets', req.query);
 
   const notificationEnpoint = req.config.service.urls.NotificationD;
   request.get(`${notificationEnpoint}/organization/${req.params.organizationId}/notification-set`, (err, clientRes) => {

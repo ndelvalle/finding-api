@@ -1,16 +1,9 @@
 #! /usr/bin/env node
-const figlet = require('figlet');
-const pkg    = require('../package');
-
-console.log();
-console.log(figlet.textSync('Api', { font: 'Ogre' }));
-console.log();
-console.log(`version: ${pkg.version} revision: ${pkg.revision}`);
-console.log();
+require('../splash');
 
 const api = require('../');
 
 api.start((err, result) => {
   if (err) { throw err; }
-  api.logger.info('Listening for HTTP requests at port %s', result.port);
+  api.logger.info(`Listening for HTTP requests at port ${result.port}`);
 });

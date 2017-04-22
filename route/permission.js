@@ -14,7 +14,7 @@ function createPermission(req, res, next) {
 }
 
 function queryPermission(req, res, next) {
-  req.logger.info('Querying permissions', req.query);
+  // req.logger.info('Querying permissions', req.query);
 
   req.model('Permission').countAndFind(req.query)
     .skip(req.skip)

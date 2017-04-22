@@ -14,7 +14,7 @@ function createRole(req, res, next) {
 }
 
 function queryRole(req, res, next) {
-  req.logger.info('Querying roles', req.query);
+  // req.logger.info('Querying roles', req.query);
 
   req.model('Role').countAndFind(req.query)
     .skip(req.skip)

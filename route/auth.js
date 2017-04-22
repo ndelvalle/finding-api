@@ -10,7 +10,7 @@ function authenticate(req, res, next) {
   const password = req.body.password;
 
   if (!username || !password) {
-    return res.status(400).send('Missing username and/or password parameters.').end();
+    return res.status(400).end();
   }
 
   const auth0     = req.config.auth0;

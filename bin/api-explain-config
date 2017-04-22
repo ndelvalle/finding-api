@@ -1,12 +1,5 @@
 #! /usr/bin/env node
-const figlet = require('figlet');
+require('../splash');
 const config = require('../config');
-const pkg    = require('../package');
-
-console.log();
-console.log(figlet.textSync('Api', { font: 'Ogre' }));
-console.log();
-console.log(`version: ${pkg.version} revision: ${pkg.revision}`);
-console.log();
 
 config.printExplainTable();

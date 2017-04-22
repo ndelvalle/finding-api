@@ -14,7 +14,7 @@ function createOrganization(req, res, next) {
 }
 
 function queryOrganization(req, res, next) {
-  req.logger.info('Querying organizations', req.query);
+  // req.logger.info('Querying organizations', req.query);
 
   req.model('Organization').countAndFind(req.query)
     .skip(req.skip)
