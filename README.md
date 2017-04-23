@@ -26,5 +26,12 @@ npm test
 npm run cover
 ```
 
+## License
+[MIT License](https://github.com/findearth/api/blob/develop/LICENSE)
+
+
+## Style
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
+
 ### Postman
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b82b37c652cedb7adc4f)
