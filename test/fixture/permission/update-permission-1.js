@@ -1,5 +1,5 @@
 const updatePermission1 = {
   $set: { name: 'user-get' }
-};
+}
 
-module.exports = updatePermission1;
+module.exports = updatePermission1
