@@ -20,6 +20,8 @@ function createPerson (req, res, next) {
     req.logger.verbose('Uploading person photos')
     async.eachOf(photos, (value, index, cb) => {
       req.aws.upload(value.data, `photos/${person._id}/${index}.png`, (err, url) => {
+        if (err) { return next(err) }
+
         value.url = url
         value.name = index
         value.order = index
