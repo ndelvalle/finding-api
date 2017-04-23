@@ -1,5 +1,5 @@
 const updateRole1 = {
   $set: { description: 'Chuck Norris' }
-};
+}
 
-module.exports = updateRole1;
+module.exports = updateRole1

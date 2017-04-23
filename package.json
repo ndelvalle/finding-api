@@ -14,8 +14,9 @@
     "test": "mocha --bail test/*.spec.js",
     "nomad": "nomad up",
     "cover": "istanbul cover _mocha test/*.spec.js",
-    "check-cover": "open coverage/lcov-report/index.html",
+    "cover:check": "open coverage/lcov-report/index.html",
     "eslint": "eslint . --ext .js",
+    "eslint:fix": "eslint . --fix .js",
     "config": "./bin/api-explain-config"
   },
   "dependencies": {
