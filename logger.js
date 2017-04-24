@@ -12,9 +12,7 @@ logger.levelLength = 7
 logger.padLevels = true
 
 logger.filters.push((_, message, meta) => {
-  if (!message && meta instanceof Error) {
-    return meta.stack || meta.message
-  }
+  if (!message && meta instanceof Error) { return meta.stack || meta.message }
   return message
 })
 

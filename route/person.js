@@ -42,7 +42,7 @@ function createPerson (req, res, next) {
 }
 
 function queryPerson (req, res, next) {
-  req.logger.info(`Querying person ${req.query}`)
+  req.logger.info(`Querying persons ${JSON.stringify(req.query)}`)
 
   if (req.query.name) {
     req.query.name = new RegExp(req.query.name, 'i')
