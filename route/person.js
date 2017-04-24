@@ -107,6 +107,7 @@ function findPersonBySlug (req, res, next) {
 
   req.model('Person').findOne({ slug: req.params.slug })
     .select('-contacts')
+    .populate('organization')
     .lean()
     .exec((err, person) => {
       if (err) { return next(err) }
