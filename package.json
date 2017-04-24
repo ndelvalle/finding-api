@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "revision": "inDev",
   "description": "",
   "main": "index.js",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "async": "^2.0.1",
-    "auth0": "^2.3.1",
+    "auth0": "^2.6.0",
     "bcrypt": "^1.0.0",
     "body-parser": "^1.15.2",
     "cors": "^2.7.1",
@@ -65,6 +65,10 @@
   "pre-commit": [
     "eslint"
   ],
+  "repository": {
+    "url": "https://github.com/FindEarth/api"
+  },
+  "license": "MIT",
   "engines": {
     "node": ">= 6"
   }
