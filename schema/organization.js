@@ -1,3 +1,4 @@
+const mongooseSlugs = require('mongoose-document-slugs')
 const Schema = require('mongoose').Schema
 
 const organizationSchema = new Schema({
@@ -6,5 +7,7 @@ const organizationSchema = new Schema({
   phones: { type: [String] },
   emails: { type: [String] }
 })
+
+organizationSchema.plugin(mongooseSlugs)
 
 module.exports = organizationSchema
