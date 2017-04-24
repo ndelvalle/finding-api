@@ -65,7 +65,8 @@ function queryPerson (req, res, next) {
 }
 
 function queryFoundPerson (req, res, next) {
-  // req.logger.info('Querying found person', req.query);
+  req.logger.info(`Querying found persons ${JSON.stringify(req.query)}`)
+
   if (req.query.name) {
     req.query.name = new RegExp(req.query.name, 'i')
   }
@@ -111,8 +112,10 @@ function findPersonBySlug (req, res, next) {
     .exec((err, person) => {
       if (err) { return next(err) }
 
+      if (!person) { return }
+
       req.logger.verbose('Sending person to client')
-      res.sendFound(person)
+      res.send(person)
     })
 }
 
