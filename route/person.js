@@ -67,9 +67,8 @@ function queryPerson (req, res, next) {
 function queryFoundPerson (req, res, next) {
   req.logger.info(`Querying found persons ${JSON.stringify(req.query)}`)
 
-  if (req.query.name) {
-    req.query.name = new RegExp(req.query.name, 'i')
-  }
+  if (req.query.name) { req.query.name = new RegExp(req.query.name, 'i') }
+
   req.query.foundAt = { $exists: true, $ne: null }
   req.model('Person').countAndFind(req.query)
     .skip(req.skip)
@@ -85,10 +84,10 @@ function queryFoundPerson (req, res, next) {
 }
 
 function queryPersonByGeolocation (req, res, next) {
-  // req.logger.info('Querying person by geolocation', req.query);
-  if (req.query.name) {
-    req.query.name = new RegExp(req.query.name, 'i')
-  }
+  req.logger.info(`Querying persons by geolocation ${JSON.stringify(req.query)}`)
+
+  if (req.query.name) { req.query.name = new RegExp(req.query.name, 'i') }
+
   req.model('Person').findNear(req.query, {
     skip: req.skip,
     limit: req.limit
@@ -111,8 +110,7 @@ function findPersonBySlug (req, res, next) {
     .lean()
     .exec((err, person) => {
       if (err) { return next(err) }
-
-      if (!person) { return }
+      if (!person) { return res.status(404).end() }
 
       req.logger.verbose('Sending person to client')
       res.send(person)
