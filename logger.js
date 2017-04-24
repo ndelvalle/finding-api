@@ -26,7 +26,7 @@ if (config.logger.sentry) {
   logger.add(winstonSentryTransport, config.logger.sentry)
 }
 
-if (config.logger.loggly) {
+if (config.logger.loggly && config.logger.loggly.inputToken) {
   logger.add(winston.transports.Loggly, config.logger.loggly)
 }
 
