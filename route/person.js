@@ -42,10 +42,12 @@ function createPerson (req, res, next) {
 }
 
 function queryPerson (req, res, next) {
-  // req.logger.info('Querying person', req.query);
+  req.logger.info(`Querying person ${req.query}`)
+
   if (req.query.name) {
     req.query.name = new RegExp(req.query.name, 'i')
   }
+
   const select = req.user ? '' : '-contacts'
   req.query.foundAt = { $exists: false }
   req.model('Person').countAndFind(req.query)
