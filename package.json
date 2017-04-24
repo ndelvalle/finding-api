@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "revision": "inDev",
   "description": "",
   "main": "index.js",
@@ -14,13 +14,14 @@
     "test": "mocha --bail test/*.spec.js",
     "nomad": "nomad up",
     "cover": "istanbul cover _mocha test/*.spec.js",
-    "check-cover": "open coverage/lcov-report/index.html",
+    "cover:check": "open coverage/lcov-report/index.html",
     "eslint": "eslint . --ext .js",
-    "explain": "./bin/api-explain-config"
+    "eslint:fix": "eslint . --fix .js",
+    "config": "./bin/api-explain-config"
   },
   "dependencies": {
     "async": "^2.0.1",
-    "auth0": "^2.3.1",
+    "auth0": "^2.6.0",
     "bcrypt": "^1.0.0",
     "body-parser": "^1.15.2",
     "cors": "^2.7.1",
@@ -40,28 +41,34 @@
     "request": "^2.58.0",
     "winston": "^2.2.0",
     "winston-child-logger": "0.0.1",
-    "winston-loggly-bulk": "^1.4.0",
+    "winston-loggly-bulk": "^1.4.2",
     "winston-sentry-transport": "0.0.1"
   },
   "devDependencies": {
     "assert-contains": "0.0.1",
     "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^14.1.0",
+    "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.3",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "istanbul": "^0.4.4",
     "methods": "^1.1.2",
     "mocha": "^3.0.2",
     "mongodb": "^2.2.4",
     "nock": "^9.0.4",
     "nodemon": "^1.10.0",
+    "nomad-cli": "^1.0.0",
     "pre-commit": "^1.1.3",
-    "sinon": "^1.17.4"
+    "sinon": "^2.1.0"
   },
   "pre-commit": [
     "eslint"
   ],
+  "repository": {
+    "url": "https://github.com/FindEarth/api"
+  },
+  "license": "MIT",
   "engines": {
     "node": ">= 6"
   }

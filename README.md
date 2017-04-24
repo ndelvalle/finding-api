@@ -7,7 +7,7 @@
 [![bitHound Dev Dependencies](https://www.bithound.io/github/Solidalert/api/badges/devDependencies.svg)](https://www.bithound.io/github/Solidalert/api/master/dependencies/npm)
 [![bitHound Code](https://www.bithound.io/github/Solidalert/api/badges/code.svg)](https://www.bithound.io/github/Solidalert/api)
 
-> :telescope:  API to store, expose, and notify about missing people to help find them
+> 🔎🌎 API to store, expose, and notify about missing people to help find them
 
 
 ### Build Setup
@@ -25,6 +25,13 @@ npm test
 # run code coverage
 npm run cover
 ```
+
+## License
+[MIT License](https://github.com/findearth/api/blob/develop/LICENSE)
+
+
+## Style
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](http://standardjs.com)
 
 ### Postman
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b82b37c652cedb7adc4f)

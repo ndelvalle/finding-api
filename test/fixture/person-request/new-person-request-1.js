@@ -1,11 +1,11 @@
 
 const newPersonRequest1 = {
-  name       : 'Foo Bar',
-  age        : 24,
-  gender     : 'M',
-  lastSeenAt : new Date(),
+  name: 'Foo Bar',
+  age: 24,
+  gender: 'M',
+  lastSeenAt: new Date(),
   description: { clothing: 'Blue jeans', appearance: 'long beard' },
-  contacts   : [{ name: 'John Doe', phone: '1234567', email: 'johndoe@email.com' }],
+  contacts: [{ name: 'John Doe', phone: '1234567', email: 'johndoe@email.com' }],
   geo: {
     loc: [
       -58.381276,
@@ -17,7 +17,6 @@ const newPersonRequest1 = {
     countryCode: 'AR',
     country: 'Argentina'
   }
-};
+}
 
-
-module.exports = newPersonRequest1;
+module.exports = newPersonRequest1

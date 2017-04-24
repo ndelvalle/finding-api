@@ -1,9 +1,9 @@
-const milieu = require('milieu');
+const milieu = require('milieu')
 
 const config = milieu('api', {
   env: 'DEV',
   server: {
-    port           : '9090',
+    port: '9090',
     maxResultsLimit: 1000
   },
   mongo: {
@@ -12,36 +12,35 @@ const config = milieu('api', {
   cors: {},
   logger: {
     console: {
-      level                          : 'silly',
-      timestamp                      : true,
-      handleExceptions               : true,
+      level: 'silly',
+      timestamp: true,
+      handleExceptions: true,
       humanReadableUnhandledException: true,
-      colorize                       : true
+      colorize: true
     },
     loggly: {
       inputToken: '',
-      subdomain : 'keepers',
-      tags      : ['findearth-api-dev'],
-      json      : true
+      subdomain: 'keepers',
+      tags: ['findearth-api-dev'],
+      json: true
     }
   },
   auth0: {
-    clientId    : '',
+    clientId: '',
     clientSecret: '',
-    token       : '',
-    domain      : 'keepers.auth0.com',
-    callbackURL : '/auth/db-callback',
-    authURL     : 'https://keepers.auth0.com/oauth/ro',
-    connections : { db: 'Username-Password-Authentication' },
-    scope       : 'openid name email'
+    token: '',
+    domain: 'keepers.auth0.com',
+    callbackURL: '/auth/db-callback',
+    authURL: 'https://keepers.auth0.com/oauth/ro',
+    connections: { db: 'Username-Password-Authentication' },
+    scope: 'openid name email user_metadata'
   },
   aws: {
-    accessKeyId    : '',
+    accessKeyId: '',
     secretAccessKey: '',
-    region         : '',
-    bucket         : ''
+    region: '',
+    bucket: ''
   }
-});
+})
 
-
-module.exports = config;
+module.exports = config
