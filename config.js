@@ -33,7 +33,7 @@ const config = milieu('api', {
     callbackURL: '/auth/db-callback',
     authURL: 'https://keepers.auth0.com/oauth/ro',
     connections: { db: 'Username-Password-Authentication' },
-    scope: 'openid name email'
+    scope: 'openid name email user_metadata'
   },
   aws: {
     accessKeyId: '',

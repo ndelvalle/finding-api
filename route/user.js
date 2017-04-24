@@ -40,7 +40,7 @@ function createUser (req, res, next) {
 }
 
 function queryUsers (req, res, next) {
-  // req.logger.info('Querying users', req.query);
+  req.logger.info(`Querying users ${JSON.stringify(req.query)}`)
 
   const params = {
     per_page: req.query.perPage ? parseInt(req.query.perPage, 10) : 50,
