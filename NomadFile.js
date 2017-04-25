@@ -2,7 +2,10 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const config = require('./config')
 
-if (process.env.NOMAD_MONGO_URL) { config.mongo.url = process.env.NOMAD_MONGO_URL }
+if (process.env.NOMAD_MONGO_URL) {
+  config.mongo.url = process.env.NOMAD_MONGO_URL
+  console.log('MONGO URL', config.mongo.url, process.env.NOMAD_MONGO_URL)
+}
 
 module.exports = function (nomad) {
   nomad.context.ObjectId = ObjectId
