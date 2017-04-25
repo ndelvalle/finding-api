@@ -10,6 +10,7 @@ exports.up = function (db, done) {
   db.collection('organizations').insertOne({
     _id: new ObjectId('57ad47e540ae419411780bbf'),
     name: 'Keepers',
+    slug: 'keepers',
     description: 'Root organization to FindEarth system',
     emails: ['hi@keepe.rs'],
     createdAt: new Date(),

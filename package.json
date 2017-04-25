@@ -12,7 +12,7 @@
     "start": "./bin/api",
     "dev": "nodemon ./bin/api",
     "test": "mocha --bail test/*.spec.js",
-    "nomad": "nomad up",
+    "nomad": "nomad --force-apply",
     "cover": "istanbul cover _mocha test/*.spec.js",
     "cover:check": "open coverage/lcov-report/index.html",
     "eslint": "eslint . --ext .js",
