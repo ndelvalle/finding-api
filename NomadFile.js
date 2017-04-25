@@ -2,6 +2,12 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const config = require('./config')
 
+if (process.env.ENV === 'qa') {
+  config.mongo.url = process.env.ENV.QA_API__MONGO__URL
+} else if (process.env.ENV === 'prod') {
+  config.mongo.url = process.env.ENV.API__MONGO__URL
+}
+
 module.exports = function (nomad) {
   nomad.context.ObjectId = ObjectId
 
