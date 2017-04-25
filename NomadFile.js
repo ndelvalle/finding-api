@@ -4,7 +4,10 @@ const config = require('./config')
 
 if (process.env.QA_API__MONGO__URL) {
   config.mongo.url = process.env.QA_API__MONGO__URL
-  console.log('MONGO URL', config.mongo.url, process.env.QA_API__MONGO__URL)
+}
+
+if (process.env.API__MONGO__URL) {
+  config.mongo.url = process.env.API__MONGO__URL
 }
 
 module.exports = function (nomad) {
