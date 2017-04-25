@@ -9,9 +9,10 @@ exports.isIgnored = false
 exports.up = function (db, done) {
   db.collection('organizations').insertOne({
     _id: new ObjectId('57ad47e540ae419411780123'),
+    slug: 'red-solidaria',
     name: 'Red Solidaria',
     description: 'Red Solirdaria Argentina',
-    emails: ['hi@keepe.rs'],
+    emails: ['dalinadegirmenci@gmail.com'],
     createdAt: new Date(),
     updatedAt: new Date(),
     __v: 0
