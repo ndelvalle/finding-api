@@ -2,11 +2,9 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const config = require('./config')
 
-if (process.env.QA_API__MONGO__URL) {
+if (process.env.ENV === 'qa') {
   config.mongo.url = process.env.QA_API__MONGO__URL
-}
-
-if (process.env.API__MONGO__URL) {
+} else if (process.env.ENV === 'prod') {
   config.mongo.url = process.env.API__MONGO__URL
 }
 
