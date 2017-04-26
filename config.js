@@ -39,7 +39,7 @@ const config = milieu('api', {
     accessKeyId: '',
     secretAccessKey: '',
     region: '',
-    bucket: ''
+    bucket: 'qa-findearth'
   }
 })
 

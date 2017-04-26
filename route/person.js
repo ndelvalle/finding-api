@@ -44,14 +44,9 @@ function createPerson (req, res, next) {
 function queryPerson (req, res, next) {
   req.logger.info(`Querying persons ${JSON.stringify(req.query)}`)
 
-  if (req.query.name) {
-    req.query.name = new RegExp(req.query.name, 'i')
-  }
-
-  const select = req.user ? '' : '-contacts'
   req.query.foundAt = { $exists: false }
   req.model('Person').countAndFind(req.query)
-    .select(select)
+    .select(req.user ? '' : '-contacts')
     .skip(req.skip)
     .limit(req.limit)
     .sort(req.sort)
@@ -66,8 +61,6 @@ function queryPerson (req, res, next) {
 
 function queryFoundPerson (req, res, next) {
   req.logger.info(`Querying found persons ${JSON.stringify(req.query)}`)
-
-  if (req.query.name) { req.query.name = new RegExp(req.query.name, 'i') }
 
   req.query.foundAt = { $exists: true, $ne: null }
   req.model('Person').countAndFind(req.query)
@@ -85,8 +78,6 @@ function queryFoundPerson (req, res, next) {
 
 function queryPersonByGeolocation (req, res, next) {
   req.logger.info(`Querying persons by geolocation ${JSON.stringify(req.query)}`)
-
-  if (req.query.name) { req.query.name = new RegExp(req.query.name, 'i') }
 
   req.model('Person').findNear(req.query, {
     skip: req.skip,
@@ -121,9 +112,8 @@ function findPersonBySlug (req, res, next) {
 function findPersonById (req, res, next) {
   req.logger.info('Finding person with id %s', req.params.id)
 
-  const select = req.user ? '' : '-contacts'
   req.model('Person').findById(req.params.id)
-    .select(select)
+    .select(req.user ? '' : '-contacts')
     .lean()
     .exec((err, person) => {
       if (err) { return next(err) }
