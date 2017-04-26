@@ -17,6 +17,7 @@ const geo = {
   city: { type: String, required: true },
   countryCode: { type: String, required: true },
   country: { type: String, required: true },
+  vicinity: { type: String },
   postalCode: { type: String }
 }
 
