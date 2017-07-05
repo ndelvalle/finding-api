@@ -17,6 +17,7 @@ const geo = {
   city: { type: String, required: true },
   countryCode: { type: String, required: true },
   country: { type: String, required: true },
+  vicinity: { type: String },
   postalCode: { type: String }
 }
 
@@ -52,7 +53,7 @@ personSchema.static('findNear', function (query, pagination, location, cb) {
   const longitude = Number(location.lng)
   const latitude = Number(location.lat)
   const project = [
-    'name', 'age', 'gender', 'description', 'photos', 'lastSeenAt', 'geo', 'distance'
+    'name', 'slug', 'age', 'gender', 'description', 'photos', 'lastSeenAt', 'geo', 'distance'
   ]
 
   delete query.radius

@@ -12,17 +12,11 @@ const config = milieu('api', {
   cors: {},
   logger: {
     console: {
-      level: 'silly',
+      level: 'debug',
       timestamp: true,
       handleExceptions: true,
       humanReadableUnhandledException: true,
       colorize: true
-    },
-    loggly: {
-      inputToken: '',
-      subdomain: 'keepers',
-      tags: ['findearth-api-dev'],
-      json: true
     }
   },
   auth0: {
@@ -39,7 +33,7 @@ const config = milieu('api', {
     accessKeyId: '',
     secretAccessKey: '',
     region: '',
-    bucket: ''
+    bucket: 'qa-findearth'
   }
 })
 

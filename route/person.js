@@ -12,7 +12,7 @@ function createPerson (req, res, next) {
   req.model('Person').create(body, (err, person) => {
     if (err) { return next(err) }
 
-    if (!req.body.photos || !req.body.photos.length) {
+    if (!photos || !photos.length) {
       req.logger.verbose('Sending person to client')
       return res.sendCreated(person)
     }
@@ -34,6 +34,7 @@ function createPerson (req, res, next) {
       req.logger.verbose('Saving uploaded photos to person model')
       person.save((err, person) => {
         if (err) { return next(err) }
+
         req.logger.verbose('Sending person to client')
         return res.sendCreated(person)
       })
@@ -42,16 +43,11 @@ function createPerson (req, res, next) {
 }
 
 function queryPerson (req, res, next) {
-  req.logger.info(`Querying persons ${JSON.stringify(req.query)}`)
+  req.logger.info('Querying persons', req.query)
 
-  if (req.query.name) {
-    req.query.name = new RegExp(req.query.name, 'i')
-  }
-
-  const select = req.user ? '' : '-contacts'
   req.query.foundAt = { $exists: false }
   req.model('Person').countAndFind(req.query)
-    .select(select)
+    .select(req.user ? '' : '-contacts')
     .skip(req.skip)
     .limit(req.limit)
     .sort(req.sort)
@@ -65,9 +61,8 @@ function queryPerson (req, res, next) {
 }
 
 function queryFoundPerson (req, res, next) {
-  req.logger.info(`Querying found persons ${JSON.stringify(req.query)}`)
-
-  if (req.query.name) { req.query.name = new RegExp(req.query.name, 'i') }
+  req.logger.info('Querying found persons', req.query)
+  // si me dan ganas de hacerlo, jaja iluso que me voy a poner a mirar go
 
   req.query.foundAt = { $exists: true, $ne: null }
   req.model('Person').countAndFind(req.query)
@@ -84,9 +79,7 @@ function queryFoundPerson (req, res, next) {
 }
 
 function queryPersonByGeolocation (req, res, next) {
-  req.logger.info(`Querying persons by geolocation ${JSON.stringify(req.query)}`)
-
-  if (req.query.name) { req.query.name = new RegExp(req.query.name, 'i') }
+  req.logger.info('Querying persons by geolocation', req.query)
 
   req.model('Person').findNear(req.query, {
     skip: req.skip,
@@ -103,7 +96,7 @@ function queryPersonByGeolocation (req, res, next) {
 }
 
 function findPersonBySlug (req, res, next) {
-  req.logger.info(`Finding person with slug ${req.params.slug}`)
+  req.logger.info('Finding person with slug', req.params.slug)
 
   req.model('Person').findOne({ slug: req.params.slug })
     .select('-contacts')
@@ -119,11 +112,10 @@ function findPersonBySlug (req, res, next) {
 }
 
 function findPersonById (req, res, next) {
-  req.logger.info('Finding person with id %s', req.params.id)
+  req.logger.info(`Finding person with id ${req.params.id}`)
 
-  const select = req.user ? '' : '-contacts'
   req.model('Person').findById(req.params.id)
-    .select(select)
+    .select(req.user ? '' : '-contacts')
     .lean()
     .exec((err, person) => {
       if (err) { return next(err) }
@@ -134,14 +126,13 @@ function findPersonById (req, res, next) {
     })
 }
 
-function getPersonsByOrganization (req, res, next) {
-  // req.logger.info('Querying persons by organization');
+function getPersonsByOrganization (req, ...args) {
   req.query = { organization: req.params.organizationId }
-  queryPerson(req, res, next)
+  queryPerson(req, ...args)
 }
 
 function updatePersonById (req, res, next) {
-  req.logger.info('Updating person with id %s', req.params.id)
+  req.logger.info(`Updating person with id ${req.params.id}`)
 
   req.model('Person').update({
     _id: req.params.id,
@@ -159,6 +150,8 @@ function updatePersonById (req, res, next) {
 }
 
 function removePersonById (req, res, next) {
+  req.logger.info(`Removing person with id ${req.params.id}`)
+
   req.model('Person').findById(req.params.id, (err, person) => {
     if (err) { return next(err) }
 
@@ -178,7 +171,8 @@ function removePersonById (req, res, next) {
 }
 
 function restorePersonById (req, res, next) {
-  req.logger.info('Restoring person with id %s', req.params.id)
+  req.logger.info(`Restoring person with id ${req.params.id}`)
+
   req.model('Person').restore({
     _id: req.params.id,
     organizaton: req.user.user_metadata.organization

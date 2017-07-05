@@ -2,8 +2,6 @@ const winston = require('winston')
 const winstonChildLogger = require('winston-child-logger')
 const winstonSentryTransport = require('winston-sentry-transport')
 
-require('winston-loggly-bulk')
-
 const config = require('./config')
 
 const logger = winstonChildLogger(new winston.Logger())
@@ -22,10 +20,6 @@ if (config.logger.console) {
 
 if (config.logger.sentry) {
   logger.add(winstonSentryTransport, config.logger.sentry)
-}
-
-if (config.logger.loggly && config.logger.loggly.inputToken) {
-  logger.add(winston.transports.Loggly, config.logger.loggly)
 }
 
 module.exports = logger
