@@ -45,8 +45,7 @@ function createPerson (req, res, next) {
 function queryPerson (req, res, next) {
   req.logger.info('Querying persons', req.query)
 
-  req.query.foundAt = { $exists: false }
-  req.model('Person').countAndFind(req.query)
+  req.model('Person').countAndFind(Object.assign(req.query, { foundAt: { $exists: false } }))
     .select(req.user ? '' : '-contacts')
     .skip(req.skip)
     .limit(req.limit)
@@ -62,7 +61,6 @@ function queryPerson (req, res, next) {
 
 function queryFoundPerson (req, res, next) {
   req.logger.info('Querying found persons', req.query)
-  // si me dan ganas de hacerlo, jaja iluso que me voy a poner a mirar go
 
   req.query.foundAt = { $exists: true, $ne: null }
   req.model('Person').countAndFind(req.query)

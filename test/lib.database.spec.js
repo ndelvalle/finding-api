@@ -5,7 +5,6 @@ const sinon = require('sinon')
 const assert = require('assert')
 const Mongoose = require('mongoose').Mongoose
 const mongooseTimestamp = require('mongoose-cu-timestamps')
-const mongooseSoftRemove = require('mongoose-soft-remove')
 const mongooseCountAndFind = require('mongoose-count-and-find')
 
 // NOTE: Fix for sinon ClockDate
@@ -34,7 +33,6 @@ describe('new Database(config, logger) -> database', () => {
 
     const requiredPlugins = [
       mongooseTimestamp,
-      mongooseSoftRemove,
       mongooseCountAndFind
     ]
 
