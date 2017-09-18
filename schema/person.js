@@ -58,7 +58,6 @@ personSchema.static('findNear', function (query, pagination, location, cb) {
 
   delete query.radius
 
-  query.removedAt = { $exists: false }
   query.foundAt = { $exists: false }
 
   aggregationPipelines.push({
