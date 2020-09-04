@@ -53,7 +53,7 @@
     "istanbul": "^0.4.4",
     "methods": "^1.1.2",
     "mocha": "^3.0.2",
-    "mongodb": "^2.2.4",
+    "mongodb": "^3.1.13",
     "nock": "^9.0.4",
     "nodemon": "^1.10.0",
     "nomad-cli": "^1.0.0",
