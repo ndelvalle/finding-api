@@ -20,7 +20,7 @@
     "config": "./bin/api-explain-config"
   },
   "dependencies": {
-    "async": "^2.0.1",
+    "async": "^3.2.2",
     "auth0": "^2.6.0",
     "bcrypt": "^1.0.0",
     "body-parser": "^1.15.2",
