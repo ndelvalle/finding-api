@@ -22,10 +22,10 @@
   "dependencies": {
     "async": "^2.0.1",
     "auth0": "^2.6.0",
-    "bcrypt": "^1.0.0",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.15.2",
     "cors": "^2.7.1",
-    "express": "^4.15.2",
+    "express": "^4.19.2",
     "express-jwt": "^5.0.0",
     "express-rest-api": "^0.1.0",
     "figlet": "^1.1.2",
