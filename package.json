@@ -25,7 +25,7 @@
     "bcrypt": "^1.0.0",
     "body-parser": "^1.15.2",
     "cors": "^2.7.1",
-    "express": "^4.15.2",
+    "express": "^4.21.2",
     "express-jwt": "^5.0.0",
     "express-rest-api": "^0.1.0",
     "figlet": "^1.1.2",
